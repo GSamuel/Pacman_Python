@@ -1,0 +1,797 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>PyCharm/debugging Tutorial</TITLE>
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		PRE { font-variant: normal; color: #333333 }
+		PRE.western { font-style: normal; font-weight: normal }
+		PRE.cjk { font-style: normal; font-weight: normal }
+		PRE.ctl { font-family: "Lohit Hindi", monospace; font-style: normal; font-weight: normal }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H4 { margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.21in; margin-bottom: 0.1in; font-variant: normal; color: #325b9d }
+		H4.western { font-style: normal }
+		H4.cjk { font-style: normal }
+		H4.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+
+<H2 CLASS="western">Topic 2: Object orientation, PyCharm and debugging</H2>
+<BLOCKQUOTE STYLE="text-align: center"><IMG SRC="images/pycharm-logo.tiff" NAME="" ALIGN=BOTTOM WIDTH=580 HEIGHT=164 BORDER=0>
+</BLOCKQUOTE>
+<BLOCKQUOTE STYLE="text-align: center"><CITE>Misunderstandings always arise,<BR>
+when you give instructions to Pacman.<BR>
+PyCharm may help you there.</CITE>
+</BLOCKQUOTE>
+
+<H3 CLASS="western">Introduction</H3>
+<P>
+This tutorial goes into some more detail about working with
+Python, in particular using the IDE PyCharm. A considerable part of it is based on the
+manual written by our student assistant Marein K&ouml;nings in 2014.
+<P>All of the files associated with this tutorial
+(including this tutorial itself) are contained in the zip archive you downloaded for week 1, so you do not have to
+download any extrra files for this week.
+</P>
+<H4 CLASS="western"><A NAME="Assignment submissions"></A>Assignment submissions</H4>
+<P>
+For this topic, you have to submit answers for problems 2
+(the <A HREF="#shopSmart"><CODE CLASS="western">shopSmart</CODE></A> function)
+and problem 3 (<A HREF="#debugAH"><CODE CLASS="western">debugging the AH shortest path code</CODE></A>).
+</P>
+<P>Submissions will be using the normal Blackboard assignment
+submission system, where for each assignment you should upload the
+.py file(s) needed for your assignment solution.
+</P>
+
+<H3 CLASS="western">Table of Contents</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Classes and Objects in Python">Classes and Objects in Python</A>
+	</P>
+    <UL>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Object Orientation Basics">Object Orientation Basics</A>
+	    </P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Defining Classes">Defining Classes</A>
+        </P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Making and Using Objects">Making and Using Objects</A>
+        </P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Static vs Instance Vars">Static vs Instance Variables</A>
+    </UL>
+    <LI><P STYLE="margin-bottom: 0in"><A HREF="#Using PyCharm for Debugging">Using PyCharm for Debugging</A>
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Clicking the stacktrace">Clicking the stacktrace</A>
+		</P>
+    	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Finding definitions by Ctrl-click">Finding definitions by Ctrl-click</A>
+		</P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Using Google effectively">Using Google effectively</A>
+		</P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Using print statements">Using print statements</A>
+		</P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Using pyCharm's Debug mode">Using pyCharm's Debug mode</A>
+		</P>
+        <UL>
+            <LI><P STYLE="margin-bottom: 0in"><A HREF="#Getting ready">Getting ready</A>
+		    </P>
+    	    <LI><P STYLE="margin-bottom: 0in"><A HREF="#The Debug interface">The Debug interface</A>
+		    </P>
+            <LI><P STYLE="margin-bottom: 0in"><A HREF="#Mouse-over">Mouse-over</A>
+		    </P>
+            <LI><P STYLE="margin-bottom: 0in"><A HREF="#Breakpoints">Breakpoints</A>
+		    </P>
+            <LI><P STYLE="margin-bottom: 0in"><A HREF="#Stepping">Stepping</A>
+            </P>
+            <LI><P STYLE="margin-bottom: 0in"><A HREF="#End boss">End boss</A>
+		    </P>
+        </UL>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Run configuration arguments">Run configuration arguments</A>
+	    </P>
+	</UL>
+</UL>
+
+<H3 CLASS="western"><A NAME="Classes and Objects in Python"></A>Classes and Objects in Python</H3>
+<P>
+You already have some experience with so called "object-oriented (OO) languages" such as C++, Java and Schema. <BR>
+Python is object-oriented too, and as such it has some specific language features to work with classes and objects.
+<P>
+The PacMan projects will not require extensive use of those object-oriented features,
+but you will need to use objects to some extent, and so it's worth covering the basics of objects in Python. <BR>
+Because this is not a course in object-oriented programming, we will only give a limited overview.
+</P>
+
+<H4 CLASS="western"><A NAME="Object Orientation Basics"></A>Object Orientation Basics</H4>
+<P>
+<em>"Don't ask what you can do to your data structures, but ask what your data structures can do for you"</em>
+<P>
+The essence of an object-oriented programme is that its architecture revolves around its data structures
+instead of around its functionality. An object-oriented programme consists of a number of interacting
+data structures called objects. The functionality of the programme is encapsulated within those objects,
+instead of being "on the loose" in the programme. <BR>
+Objects not only contain data, but also functions to interact with and manipulate those data:
+that makes them active, self-contained, independent (but cooperating) entities playing some role within the programme.
+<P>
+An object does not just contain its data and functions, it <b>encapsulates</b> them: they can only be accessed from
+outside the object in as far as the object allows it. <BR>
+Direct access to object data is strongly discouraged in most OO languages: the object always has to be <b>asked</b>.
+A well-constructed object has special functions for that purpose, often called "getters" (for reading data)
+and "setters" (for changing data). <BR>
+Object functions may or may not be accessible from outside the object. Those functions that are, are said to be part of
+the "message set" for the object, they are "public". But other functions may be intended for use by the object itself
+only: they are "private".
+<P>
+By encapsulating related data in objects, together with the relevant functions, inappropriate use is (largely) avoided,
+and related actions are kept together: only the object is made responsible for guarding, using and updating its data.
+<P>
+The actual objects in a running OO programme are instances of their respective <em>class</em>. In principle,
+there can be an unlimited number of instances of the same class (just as there can be an unlimited number of
+variables of the same type, e.g. integer). <BR>
+The class (or rather: the class definition) contains the description for the object instances of that class.
+The class definition also states (expicitly ot implicitly) which data elements and functions are accessible from
+outside the object (i.e. are "public").<BR>
+A class may be declared to be a sub-class (or "daughter") of another (existing) class. If so, the sub-class will
+<em>inherit</em> all data and functions from the "mother": that is, in as far as the sub-class does not contain
+any definition of itself, it is a copy of the "mother" class. Where the sub-class does contain definitions,
+they overrule or add to those of the "mother" class.
+
+<H4 CLASS="western"><A NAME="Defining Classes"></A>Defining Classes</H4>
+<P>
+Below is an example of defining a class named <CODE CLASS="western">FruitShop</CODE>. <BR>
+The <CODE CLASS="western">FruitShop</CODE> class has some data, the
+name of the shop and the prices per pound of some fruit, and it
+provides functions, or methods, on this data.
+<P>
+<em>NOTE</em> that all functions <em>and data members</em> are public in the class definition below. In Python,
+a name starting <em>but not ending</em> with "__" (two underscores) means that the function or variable is private;
+all other functions and variables are public.
+Many (but surely not all) Python programmers do not find public data members problematic. <BR>
+<em>ALSO NOTE</em> the "getter" functions for providing access to the object data, even though tey are public.
+It's considered good Python practice <em>not</em> to directly access object data (even if you can),
+but to use getters / setters. The function "<CODE>getName(self)</CODE>" does nothing else but return the value
+of "self.name", the other functions do a little bit more than just "getting". <BR>
+<em>ALSO NOTE</em> that every data element starts with "<CODE>self.</CODE>", referring to the object itself:
+you have to indicate explicitly that the variable is part of the object. <BR>
+<em>ALSO NOTE</em> that every function has "self" as its first parameter. This parameter is obligatory
+(and must be the first) for object functions. <BR>
+<em>ALSO NOTE</em> the first function "<CODE>__init__(self, name, fruitPrices):</CODE>". This is a so called
+"constructor" which is invoked every time that an object from this class is instantiated (and only then). One of the
+things it does is initializing object data with values provided as parameters to the constructor function. <BR>
+</P>
+<PRE CLASS="western"><CODE CLASS="western">class FruitShop:</CODE>
+
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def __init__(self, name, fruitPrices):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot;</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">name: Name of the fruit shop</CODE>
+<CODE CLASS="western">            </CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">fruitPrices: Dictionary with keys as fruit </CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">strings and prices for values e.g. </CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">{'apples':2.00, 'oranges': 1.50, 'pears': 1.75} </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot;</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">self.fruitPrices = fruitPrices</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">self.name = name</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">print('Welcome to the %s fruit shop' % (name))</CODE>
+<CODE CLASS="western">        </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def getCostPerPound(self, fruit):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot;</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">fruit: Fruit string</CODE>
+<CODE CLASS="western">            </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">Returns cost of 'fruit', assuming 'fruit'</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">is in our inventory or None otherwise</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot;</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">if fruit not in self.fruitPrices:</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">print(&quot;Sorry we don't have %s&quot; % (fruit))</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">return None</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">return self.fruitPrices[fruit]</CODE>
+<CODE CLASS="western">        </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def getPriceOfOrder(self, orderList):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot;</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">orderList: List of (fruit, numPounds) tuples</CODE>
+<CODE CLASS="western">            </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">Returns cost of orderList. If any of the fruit are  </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">&quot;&quot;&quot; </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">totalCost = 0.0             </CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">for fruit, numPounds in orderList:</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">costPerPound = self.getCostPerPound(fruit)</CODE>
+<CODE CLASS="western">            </CODE><CODE CLASS="western">if costPerPound != None:</CODE>
+<CODE CLASS="western">                </CODE><CODE CLASS="western">totalCost += numPounds * costPerPound</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">return totalCost</CODE>
+<CODE CLASS="western">    </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def getName(self):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">return self.name</CODE></PRE>
+<P>
+
+<H4 CLASS="western"><A NAME="Making and Using Objects"></A>Making and Using Objects</H4>
+<P>
+So how do we make an object and use it? <BR>
+Download the <CODE CLASS="western">FruitShop</CODE>
+implementation in <CODE CLASS="western"><A HREF="shop.py">shop.py</A></CODE>. <BR>
+After importing the code from this file (making it accessible to other scripts)
+using <CODE CLASS="western">import shop</CODE> (since
+<CODE CLASS="western"><A HREF="shop.py">shop.py</A></CODE> is
+the name of the file), we can then create and use <CODE CLASS="western">FruitShop</CODE> objects as follows:
+</P>
+<PRE CLASS="western"><CODE CLASS="western">import shop</CODE>
+
+<CODE CLASS="western">shopName = 'the Berkeley Bowl'</CODE>
+<CODE CLASS="western">fruitPrices = {'apples': 1.00, 'oranges': 1.50, 'pears': 1.75}</CODE>
+<CODE CLASS="western">berkeleyShop = shop.FruitShop(shopName, fruitPrices)</CODE>
+<CODE CLASS="western">applePrice = berkeleyShop.getCostPerPound('apples')</CODE>
+<CODE CLASS="western">print(applePrice)</CODE>
+<CODE CLASS="western">print('Apples cost $%.2f at %s.' % (applePrice, shopName))</CODE>
+
+<CODE CLASS="western">otherName = 'the Stanford Mall'</CODE>
+<CODE CLASS="western">otherFruitPrices = {'kiwis':6.00, 'apples': 4.50, 'peaches': 8.75}</CODE>
+<CODE CLASS="western">otherFruitShop = shop.FruitShop(otherName, otherFruitPrices)</CODE>
+<CODE CLASS="western">otherPrice = otherFruitShop.getCostPerPound('apples')</CODE>
+<CODE CLASS="western">print(otherPrice)</CODE>
+<CODE CLASS="western">print('Apples cost $%.2f at %s.' % (otherPrice, otherName))</CODE>
+<CODE CLASS="western">print(&quot;My, that's expensive!&quot;)</CODE></PRE><P>
+You can download this code in <CODE CLASS="western"><A HREF="shopTest.py">shopTest.py</A></CODE>
+and run it like this:
+</P>
+<PRE CLASS="western"><CODE CLASS="western">[cs188-ta@midway ~]$ python shopTest.py</CODE>
+<CODE CLASS="western">Welcome to the Berkeley Bowl fruit shop</CODE>
+<CODE CLASS="western">1.0</CODE>
+<CODE CLASS="western">Apples cost $1.00 at the Berkeley Bowl.</CODE>
+<CODE CLASS="western">Welcome to the Stanford Mall fruit shop</CODE>
+<CODE CLASS="western">4.5</CODE>
+<CODE CLASS="western">Apples cost $4.50 at the Stanford Mall.</CODE>
+<CODE CLASS="western">My, that's expensive!</CODE></PRE>
+<P>
+So what just happened? <BR>
+The <CODE CLASS="western">import shop</CODE> statement told Python to load all of the functions and classes in
+<CODE CLASS="western"><A HREF="shop.py">shop.py</A></CODE>. <BR>
+The line <CODE CLASS="western">berkeleyShop = shop.FruitShop(shopName, fruitPrices)</CODE> constructs an
+<EM>instance</EM> of the <CODE CLASS="western">FruitShop</CODE> class defined in
+<EM>shop.py</EM>, by calling the constructor function <CODE CLASS="western">__init__</CODE>
+in that class. <BR>
+<em>NOTE</em> that we only passed two arguments to the constructor, while <CODE CLASS="western">__init__</CODE> seems
+to take three arguments: <CODE CLASS="western">(self, name, fruitPrices)</CODE>.
+The reason for this is that all methods in a class have <CODE CLASS="western">self</CODE>
+as the first argument. The value of the variable <CODE CLASS="western">self</CODE>
+is automatically set to the object itself; when
+calling a method, you only supply the remaining arguments. The <CODE CLASS="western">self</CODE>
+variable contains all the data (<CODE CLASS="western">name</CODE> and
+<CODE CLASS="western">fruitPrices</CODE>) for the current specific
+instance (similar to <CODE CLASS="western">this</CODE> in Java). <BR>
+<em>ALSO NOTE</em> that when we call a method of an object, we have to precede the function name by the object name
+and a dot: not <CODE>getCostPerPound('apples')</CODE> but <CODE>berkeleyShop.getCostPerPound('apples')</CODE>. <BR>
+The print statements use the substitution operator (described in the
+<A HREF="https://docs.python.org/3/library/stdtypes.html#textseq">Python
+docs</A> if you're curious).
+</P>
+
+<H4 CLASS="western"><A NAME="Static vs Instance Vars"></A>Static vs Instance Variables</H4>
+<P>
+The variables in the Fruitshop class above are all <em>Instance Variables</em>. Every instance (object) of the
+Fruithop class has its own copies of the variables <CODE CLASS="western">fruitPrices</CODE> and
+<CODE CLASS="western">name</CODE> with their own values. <BR>
+In contrast, <em>Static Variables</em> are shared by all instances of a class. If the value of a static variable changes,
+it changes for all instances (objects) of that class. <BR>
+Variables that are first mentioned <em>within</em> the <CODE>__init__</CODE> definition are instance variables,
+a variable that is first mentioned <em>before</em> the <CODE>__init__</CODE> definition is static.
+<P>
+The following example illustrates how to static and instance variables work in Python. <BR>
+Create the file <CODE CLASS="western">person_class.py</CODE>
+containing the following code:
+</P>
+<PRE CLASS="western"><CODE CLASS="western">class Person:</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">population = 0</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def __init__(self, myAge):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">self.age = myAge</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">Person.population += 1</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def get_population(self):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">return Person.population</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">def get_age(self):</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">return self.age</CODE></PRE>
+<P>
+We first compile the script: <BR>
+<CODE CLASS="western">C:/&gt;python person_class.py</CODE> <BR>
+Now use the class as follows: <BR>
+<CODE CLASS="western">
+&gt;&gt;&gt;import person_class <BR>
+&gt;&gt;&gt; p1 = person_class.Person(12) <BR>
+&gt;&gt;&gt;p1.get_population() <BR>
+1 <BR>
+&gt;&gt;&gt; p2 = person_class.Person(63) <BR>
+&gt;&gt;&gt; p1.get_population() <BR>
+2 <BR>
+&gt;&gt;&gt; p2.get_population() <BR>
+2 <BR>
+&gt;&gt;&gt; p1.get_age() <BR>
+12 <BR>
+&gt;&gt;&gt; p2.get_age() <BR>
+63
+</CODE>
+<P>
+In the code above, <CODE CLASS="western">age</CODE>
+is an instance variable and <CODE CLASS="western">population</CODE>
+is a static variable. <CODE CLASS="western">population</CODE> is
+shared by all instances of the <CODE CLASS="western">Person</CODE>
+class whereas each instance has its own <CODE CLASS="western">age</CODE>
+variable.
+<P>
+<A NAME="shopSmart"></A>
+<BR>
+<EM><B>Problem 2 (for submission): </B></EM>
+<P>
+Fill in the function <CODE CLASS="western">shopSmart(orders,shops)</CODE> in
+<CODE CLASS="western"><A HREF="shopSmart.py">shopSmart.py</A></CODE>,
+which takes an <CODE CLASS="western">orderList</CODE> (like the kind
+passed in to <CODE CLASS="western">FruitShop.getPriceOfOrder</CODE>)
+and a list of <CODE CLASS="western">FruitShop</CODE> and returns the
+<CODE CLASS="western">FruitShop</CODE> where your order costs the
+least amount in total. Don't change the file name or variable names,
+please. Note that we will provide the <CODE CLASS="western"><A HREF="shop.py">shop.py</A></CODE>
+implementation as a &quot;support&quot; file, so you don't need to
+submit yours.
+</P>
+<P><EM>Test Case:</EM>We will check that, with the following variable
+definitions:
+</P>
+<PRE CLASS="western"><CODE CLASS="western">orders1 = [('apples',1.0), ('oranges',3.0)]</CODE>
+<CODE CLASS="western">orders2 = [('apples',3.0)]                       </CODE>
+<CODE CLASS="western">dir1 = {'apples': 2.0, 'oranges':1.0}</CODE>
+<CODE CLASS="western">shop1 =  shop.FruitShop('shop1',dir1)</CODE>
+<CODE CLASS="western">dir2 = {'apples': 1.0, 'oranges': 5.0}</CODE>
+<CODE CLASS="western">shop2 = shop.FruitShop('shop2',dir2)</CODE>
+<CODE CLASS="western">shops = [shop1, shop2]</CODE></PRE><P>
+The following are true:
+</P>
+<P><CODE CLASS="western">shopSmart.shopSmart(orders1,
+shops).getName() == 'shop1' </CODE>
+</P>
+<P>and</P>
+<P><CODE CLASS="western">shopSmart.shopSmart(orders2,
+shops).getName() == 'shop2' </CODE>
+<BR><BR>
+</P>
+
+<H3 CLASS="western"><A NAME="Using PyCharm for Debugging"></A>Using PyCharm for Debugging</H3>
+<P>
+Over the coming weeks, it will sometimes be difficult to locate the causes of problems in your code.
+Especially so since the Pacman programme is large and complex, and the error messages provided by Python can
+occasionally be hard to interpret. <BR>
+To help you find out what's wrong in case you get an error message (which will undoubtedly happen), we'll discuss
+some PyCharm techniques that can make the process a lot easier.
+The bulk of the discussion will be about debug mode, but the other topics should be useful too.
+<P>
+We'll be using the following example to learn about these powerful techniques. This code can also be found in the file albert1.py.
+<P>
+
+<pre><span class="pl-k">import</span> math <span class="pl-c"># a built-in library containing some mathematical operations like square root</span>
+
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-s1">A class to represent an Albert Heijn with a 'name' and 'x', 'y' coordinates</span>
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-st">class</span> <span class="pl-en">AlbertHeijn</span>():
+    <span class="pl-st">def</span> <span class="pl-en"><span class="pl-s3">__init__</span></span>(<span class="pl-vpf">self</span>, <span class="pl-vpf">name</span>, <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>):
+        <span class="pl-v">self</span>.name <span class="pl-k">=</span> name
+        <span class="pl-v">self</span>.x <span class="pl-k">=</span> x
+        <span class="pl-v">self</span>.y <span class="pl-k">=</span> y
+
+    <span class="pl-s1"><span class="pl-pds">'</span>Returns the position as an (x,y) tupple<span class="pl-pds">'</span></span>
+    <span class="pl-st">def</span> <span class="pl-en">getPosition</span>(<span class="pl-vpf">self</span>):
+        <span class="pl-k">return</span> (<span class="pl-v">self</span>.x, <span class="pl-v">self</span>.y)
+
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-s1">A class to represent a Terminal Kamer</span>
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-st">class</span> <span class="pl-en">TerminalKamer</span>():
+    <span class="pl-st">def</span> <span class="pl-en"><span class="pl-s3">__init__</span></span>(<span class="pl-vpf">self</span>, <span class="pl-vpf">x</span>, <span class="pl-vpf">y</span>):
+        <span class="pl-v">self</span>.x <span class="pl-k">=</span> x
+        <span class="pl-v">self</span>.y <span class="pl-k">=</span> y
+
+    <span class="pl-st">def</span> <span class="pl-en">getPosition</span>(<span class="pl-vpf">self</span>):
+        <span class="pl-k">return</span> (<span class="pl-v">self</span>.x, <span class="pl-v">self</span>.y)
+
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-s1">Returns the distance between points 'xy1' and 'xy2'</span>
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-st">def</span> <span class="pl-en">distance</span>(<span class="pl-vpf">xy1</span>, <span class="pl-vpf">xy2</span>):
+    <span class="pl-k">return</span> math.sqrt(<span class="pl-s3">pow</span>(xy1[<span class="pl-c1">0</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">0</span>], <span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-s3">pow</span>(xy1[<span class="pl-c1">1</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">1</span>], <span class="pl-c1">2</span>))
+
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-s1">Returns the distance to the Albert Heijn in 'ahs' that is closest to 'pos'</span>
+<span class="pl-s1"><span class="pl-pds">'''</span></span>
+<span class="pl-st">def</span> <span class="pl-en">closestAHDistance</span>(<span class="pl-vpf">tk</span>, <span class="pl-vpf">ahs</span>):
+    tkpos <span class="pl-k">=</span> tk.getPosition()
+    ahPositions <span class="pl-k">=</span> [ah.getPosition <span class="pl-k">for</span> ah <span class="pl-k">in</span> ahs]
+    ahDistances <span class="pl-k">=</span> [distance(tkpos, ahpos) <span class="pl-k">for</span> ahpos <span class="pl-k">in</span> ahPositions]
+    closestAHDistance <span class="pl-k">=</span> <span class="pl-s3">min</span>(ahDistances)
+    <span class="pl-k">return</span> closestAHDistance
+
+<span class="pl-s1"><span class="pl-pds">'</span>some Albert Heijns in Nijmegen<span class="pl-pds">'</span></span>
+albertheijns <span class="pl-k">=</span> [
+    AlbertHeijn(<span class="pl-s1"><span class="pl-pds">'</span>Daalseweg<span class="pl-pds">'</span></span>, <span class="pl-c1">85</span>, <span class="pl-c1">77</span>),
+    AlbertHeijn(<span class="pl-s1"><span class="pl-pds">'</span>Groenestraat<span class="pl-pds">'</span></span>, <span class="pl-c1">68</span>, <span class="pl-c1">69</span>),
+    AlbertHeijn(<span class="pl-s1"><span class="pl-pds">'</span>van Schevichavenstraat<span class="pl-pds">'</span></span>, <span class="pl-c1">79</span>, <span class="pl-c1">83</span>),
+    AlbertHeijn(<span class="pl-s1"><span class="pl-pds">'</span>St. Jacobslaan<span class="pl-pds">'</span></span>, <span class="pl-c1">70</span>, <span class="pl-c1">58</span>),
+    AlbertHeijn(<span class="pl-s1"><span class="pl-pds">'</span>Stationsplein<span class="pl-pds">'</span></span>, <span class="pl-c1">70</span>, <span class="pl-c1">82</span>)
+    ]
+<span class="pl-s1"><span class="pl-pds">'</span>the TK<span class="pl-pds">'</span></span>
+tk <span class="pl-k">=</span> TerminalKamer(<span class="pl-c1">75</span>, <span class="pl-c1">56</span>)
+
+<span class="pl-s1"><span class="pl-pds">'</span>print the closest distance to an Albert Heijn from the TK<span class="pl-pds">'</span></span>
+<span class="pl-k">print</span>(closestAHDistance(tk, albertheijns))</pre>
+
+<P>
+
+As you can tell, this code defines a class and some functions, then uses these to create a list of Albert Heijns and calculate the distance to the closest Albert Heijn from the TK. Before moving on, please make sure that you understand how the code does this.<br><br>
+
+The code presented here is logically correct - it will find the distance to the closest Albert Heijn. But there's a mistake in the code. By running this file in Python/PyCharm (try it!), we encounter the following error message or 'stacktrace':
+
+<pre>Traceback (most recent call last):
+  File <span class="pl-s1"><span class="pl-pds">"</span>filename.py<span class="pl-pds">"</span></span>, line <span class="pl-c1">55</span>, <span class="pl-k">in</span> <span class="pl-k">&lt;</span>module<span class="pl-k">&gt;</span>
+    <span class="pl-k">print</span>(closestAHDistance(tk, albertheijns))
+  File <span class="pl-s1"><span class="pl-pds">"</span>filename.py<span class="pl-pds">"</span></span>, line <span class="pl-c1">39</span>, <span class="pl-k">in</span> closestAHDistance
+    ahDistances <span class="pl-k">=</span> [distance(tkpos, ahpos) <span class="pl-k">for</span> ahpos <span class="pl-k">in</span> ahPositions]
+  File <span class="pl-s1"><span class="pl-pds">"</span>filename.py<span class="pl-pds">"</span></span>, line <span class="pl-c1">39</span>, <span class="pl-k">in</span> <span class="pl-k">&lt;</span>listcomp<span class="pl-k">&gt;</span>
+    ahDistances <span class="pl-k">=</span> [distance(tkpos, ahpos) <span class="pl-k">for</span> ahpos <span class="pl-k">in</span> ahPositions]
+  File <span class="pl-s1"><span class="pl-pds">"</span>filename.py<span class="pl-pds">"</span></span>, line <span class="pl-c1">31</span>, <span class="pl-k">in</span> distance
+    <span class="pl-k">return</span> math.sqrt(<span class="pl-s3">pow</span>(xy1[<span class="pl-c1">0</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">0</span>], <span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-s3">pow</span>(xy1[<span class="pl-c1">1</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">1</span>], <span class="pl-c1">2</span>))
+<span class="pl-s3">TypeError</span>: <span class="pl-s1"><span class="pl-pds">'</span>method<span class="pl-pds">'</span></span> <span class="pl-s3">object</span> <span class="pl-k">is</span> <span class="pl-k">not</span> subscriptable</pre>
+
+
+<H4 CLASS="western"><A NAME="Clicking the stacktrace"></A>Clicking the stacktrace</H4>
+<P>
+The first thing you should know is that the links in stacktraces (likely colored purple in PyCharm) can be clicked,
+and they will take you to the location in the code that is mentioned by that line of the stacktrace. <BR>
+For example, we can click the last link and see that it takes us to the last line of the following method:
+<P>
+
+<pre>
+<span class="pl-s"><span class="pl-pds">'''</span></span>
+<span class="pl-s">Returns the distance between points 'xy1' and 'xy2'</span>
+<span class="pl-s"><span class="pl-pds">'''</span></span>
+<span class="pl-k">def</span> <span class="pl-en">distance</span>(<span class="pl-smi">xy1</span>, <span class="pl-smi">xy2</span>):
+    <span class="pl-k">return</span> math.sqrt(<span class="pl-c1">pow</span>(xy1[<span class="pl-c1">0</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">0</span>], <span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-c1">pow</span>(xy1[<span class="pl-c1">1</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">1</span>], <span class="pl-c1">2</span>))
+  </pre>
+
+<P>
+According to the stacktrace, this line is producing the error "TypeError: 'method' object is not subscriptable". <BR>
+What on earth does that mean? We'll examine it later. First of all, what if we don't know what <CODE>math.sqrt</CODE> does?
+There's an easy way to find out.
+<P>
+
+<H4 CLASS="western"><A NAME="Finding definitions by Ctrl-click"></A>Finding definitions by Ctrl-click</H4>
+<P>
+By holding the Ctrl (or Cmd on Mac) key and clicking on any variable or method call in the code,
+PyCharm will attempt to show you the definition of that variable or method.
+For example, if we ctrl-click on <CODE>xy1</CODE> in the 'return' statement, PyCharm will show us that it is
+defined as a parameter of the <CODE CLASS="western">distance</CODE> method. And if we ctrl-click on the
+<CODE CLASS="western">math.sqrt</CODE> call, PyCharm will show us the definition of that method. <BR>
+The function <CODE CLASS="western">math.sqrt</CODE> is a bit special though: it's built-in, so PyCharm can only show
+us the documentation for it, not the actual code. But that can already help: we can read "Return the square root of x.". <BR>
+If you're still not sure at this point what a function does, well, use Google. But be sure to remember that ctrl-clicking will also work for methods that are
+used inside the Pacman projects, which will help you figure out what the pre-functions you are using actually do. Exploring like this can also help you discover functions that are defined near the functions that you already know of, which may be very useful discoveries.
+<P>
+
+<H4 CLASS="western"><A NAME="Using Google effectively"></A>Using Google effectively</H4>
+<P>
+At the risk of stressing the obvious, Google is one of your your best resources when you're stuck
+(and there are no teachers or assistants around). <BR>
+However it does take some practice to become familiar enough with a certain area of expertise before you can effectively
+use Google to solve problems in that area. That is to say, you have to know what to look for...
+<P>
+Let's see what Google can tell us about the error we got in our code. Most likely, all words in the error message
+are familiar to you, except "subscriptable". <A href="https://www.google.nl/search?q=subscriptable">Googling that</A>
+should give you a bunch of results about Python right away. When we tried, the first hit was
+<A href="http://stackoverflow.com/questions/216972/in-python-what-does-it-mean-if-an-object-is-subscriptable-or-not">
+a question on Stack Overflow</A>, a very handy site for programming questions: "In Python, what does it mean if an
+object is subscriptable or not?" <BR>
+The top answer says:
+<BLOCKQUOTE>
+It basically means that the object implements the <CODE CLASS="western">__getitem__()</CODE> method.
+In other words, it describes objects that are "containers", meaning they contain other objects.
+This includes lists, tuples, and dictionaries.
+</BLOCKQUOTE><P>
+Doesn't make much sense yet? Let's look at the next best answer:
+<BLOCKQUOTE>
+Off the top of my head, the following are the only built-ins that are subscriptable:
+<CODE CLASS="western"> <BR>
+string: "foobar"[3] == "b" <BR>
+tuple: &nbsp;(1,2,3,4)[3] == 4 <BR>
+list: &nbsp;&nbsp;[1,2,3,4][3] == 4 <BR>
+dict: &nbsp;&nbsp;{"a":1, "b":2, "c":3}["c"] == 3 <BR>
+</CODE>
+But mipadi's answer is correct; any class that implements <CODE>__getitem__</CODE> is subscriptable.
+</BLOCKQUOTE><P>
+If we compare this information with the error message, we might understand that 'subscripting' is the method of getting
+an element from a list-like variable type, using the square bracket notation with an index (e.g. <CODE>[3]</CODE>). <BR>
+If we want to confirm this theory, we can try to Google what we now think are two related terms: 'subscript index'.
+The first hit should be the Wikipedia article on <A href="http://en.wikipedia.org/wiki/Index_notation">Index Notation</A>.
+On this page, we can do a search (Ctrl+F) for 'subscript' to find our confirmation:
+<BLOCKQUOTE>
+It is frequently helpful in mathematics to refer to the elements of an array using subscripts.
+</BLOCKQUOTE><P>
+So indeed, subscripting has to do with the notation for getting an element from an array/list.
+Further down on the Wikipedia page, there's even a piece of example C code showing the square bracket notation itself.
+</P>
+
+<H4 CLASS="western"><A NAME="Using print statements"></A>Using print statements</H4>
+<P>
+Let's take another look at the full error.
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;<CODE CLASS="western">TypeError: 'method' object is not subscriptable</CODE>
+<P>
+Apparently some object is subscripted, which is illegal because the object is a 'method' object, whatever that means. <BR>
+If we look at the line of code where the error occurs:
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;<CODE CLASS="western">return math.sqrt(pow(xy1[0] - xy2[0], 2) + pow(xy1[1] - xy2[1], 2))</CODE>
+<P>
+we find that there are, indeed, several subscripts on this line. Apparently one of these is being done on an object that
+does not actually allow subscripting. How do we find out which object is the culprit? And why?
+<P>
+We could place a print statement in the method, to show us what the variables are.
+<pre>
+  <span class="pl-k">def</span> <span class="pl-en">distance</span>(<span class="pl-smi">xy1</span>, <span class="pl-smi">xy2</span>):
+  <span class="pl-s"><span class="pl-pds">print(xy1, xy2)</span></span>
+  <span class="pl-k">return</span> math.sqrt(<span class="pl-c1">pow</span>(xy1[<span class="pl-c1">0</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">0</span>], <span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-c1">pow</span>(xy1[<span class="pl-c1">1</span>] <span class="pl-k">-</span> xy2[<span class="pl-c1">1</span>], <span class="pl-c1">2</span>))
+</pre>
+<P>
+Running the code now shows us this:
+<P>
+&nbsp;&nbsp;<CODE CLASS="western">(75, 56) &#60;bound method AlbertHeijn.getPosition of &#60;code.AlbertHeijn object at 0x7fb419af4f28>></CODE>
+<P>
+Well, that's certainly not what a position is supposed to look like, so something's wrong.
+But what's going on? How did this strange object end up in the <CODE>distance</CODE> method?
+Print statements do not really help us much. <BR>
+Not only are print statements too weak for complex debugging, they can also be confusing and even dangerous. <BR>
+Imagine that we were dealing with something more complex than a simple position. We might need several debug print
+statements, that would be in between the regular programme output. Confusing. <BR>
+Furthermore: in some cases the error might occur in pieces of code that we did not write ourselves. What if we make a mistake and mess up other peoples' code?
+<P>
+We need a better way of finding errors in our code - a way where we don't need to add things or change our code
+to find the error.
+<P>
+
+<H4 CLASS="western"><A NAME="Using pyCharm's Debug mode"></A>Using pyCharm's Debug mode</H4>
+<P>
+This is where pyCharm's debug mode comes in. Normally when you run a program, the computer just runs it,
+without thinking that you might want to know what's happening in the code (because most of the time, you don't). <BR>
+In debug mode, the computer keeps track of what is happening. It can show you what variables there are and what their
+current values are.
+You can pause the execution of the code when you like to see what is going on at a particular point in your code.
+And you can just get a lot more information about the way the computer is running your program.
+<P>
+Debug mode is a key feature of an Integrated Development Environment (IDE) like PyCharm. It's one of the reasons we
+use IDE's instead of editing our code in Notepad or some such. And if you learn how to use debug mode in one IDE,
+you'll pretty much know how to do it in any one.
+<P>
+
+<H4 CLASS="western"><A NAME="Getting ready"></A>&nbsp;&nbsp;&nbsp;&nbsp;--Getting ready--</H4>
+<P>
+To use debug mode, first make sure that you have set a 'run-configuration' in PyCharm.
+This just means that you have taken the steps so that you can click the green arrow in the top right to run the code.
+<P>
+<img src="images/toprightrunarrow.png"title="Run-arrow in the top-right">
+<P>
+If the arrow in the top-right is not green, you can set a run-configuration by right-clicking on the
+open file in the project manager to the left, and selecting "<CODE>Run 'albert1.py'...</CODE>".
+<P>
+<img src="images/runalbert1py.png"title="Run albert1.py">
+<P>
+If your project files are not in the list to the left, you can load them using the menu-option
+<CODE>File -> Open Directory...</CODE>
+<P>
+Once you can run your Python file using the arrow to the top-right, you can use debug mode.
+You can launch debug mode by clicking the 'bug' icon right next to the green arrow.
+When a program is started in debug mode, it may be a bit slower, especially at the start, so be patient. <BR>
+When an error is encountered in debug mode, the program will 'break', which means it will pause and show you
+where the error occurred.
+<P>
+
+<H4 CLASS="western"><A NAME="The Debug interface"></A>&nbsp;&nbsp;&nbsp;&nbsp;--The Debug interface--</H4>
+<P>
+If you place the above code in a PyCharm project and run it in debug mode,
+you should eventually see something like this:
+<P>
+<img src="images/debugmodebreaks.png"title="Debug mode 'breaks'">
+<p>
+If you don't see any line numbers, right-click the area where they should be. There will be a popup window with options
+where you can enable line numbers.
+<P>
+The icon <img src="images/breakpoint.png"title="Breakpoint"> on line 31 indicates that an error occurred
+on this line, and debug mode placed a 'breakpoint' here, halting the execution, so that you can have a look at
+what's going on, and what the current state of all the variables is.
+<P>
+At the bottom of the screen, some new windows have appeared. Two of them are of special interest for now:
+the 'Frames' window to the left, and the 'Variables' window in the middle. <BR>
+The Variables window lists the variables that exist at the current execution state.
+As you can see, it lists <CODE>xy1</CODE> and <CODE>xy2</CODE>. <CODE>xy1</CODE> is a tuple, representing a position,
+just as expected. However <CODE>xy2</CODE> is a <em>'method'</em>. <BR>
+So far, we get the same information as we saw when we printed these variables. Now, however, we can trace back where
+this strange variable came from, using the Frames window. <BR>
+The Frames window shows the path of methods through which the code reached the <CODE>distance</CODE> method.
+As you can see, it starts at the bottom with a <CODE>run</CODE> method, going through <CODE>closestAHDistance</CODE> and
+<CODE>&#60;listcomp&#62;</CODE> on its way to <CODE>distance</CODE>.
+Each method in the list contains a line on which it calls the method above it.
+We can click on a method in the list to see it, and also see the variables that exist in the method. <BR>
+Let's click on the method <CODE>&#60;listcomp&#62;</CODE> below <CODE>distance</CODE>.
+<P>
+<img src="images/listcomp.png"title="<listcomp>">
+<P>
+You need to know that <CODE>&#60;listcomp&#62;</CODE> is a method that does 'list comprehension':
+the kind of stuff like <CODE>x for y in z</CODE>. This is exactly what we see on line 39.
+We also see that <CODE>distance</CODE> is called on that line: this makes perfect sense, since that was the previous
+level in the Frames list.
+<P>
+
+<H4 CLASS="western"><A NAME="Mouse-over"></A>&nbsp;&nbsp;&nbsp;&nbsp;--Mouse-over--</H4>
+<P>
+In the Variables window, we now see the variables that exist in the list comprehension.
+Instead of reading the Variables window, we can also mouse-over the variables in the code, and get the same information.
+For example for the variable <CODE>ahpos</CODE> in the list comprehension, we again see that there is a method here:
+<P>
+<img src="images/mouseoverinfo.png"title="Mouse-over variable information">
+<P>
+Let's go one level higher in the Frames window, to <CODE>closestAHDistance</CODE>, to see what variables exist there. We can now mouse-over <CODE>ahPositions</CODE> and see that that variable is a list with the strange method object in it.
+<P>
+<img src="images/ahpositionsmouseover.png"title="ahPositions mouse-over information">
+<P>
+It seems certain that something is going wrong while creating the <CODE>ahPositions</CODE> variable. Why is there
+a 'method object' in it instead of a tuple of integers? We need to take a look at how the list is being created.
+However, the list already exists at the time that the program has halted. So how can we look at what's happening
+during its creation?
+<P>
+
+<H4 CLASS="western"><A NAME="Breakpoints"></A>&nbsp;&nbsp;&nbsp;&nbsp;--Breakpoints--</H4>
+<P>
+We saw that debug mode placed a breakpoint for us on line 31, in the <CODE>distance</CODE> method.
+We can also place our own breakpoints to tell debug mode to halt the program and let us take a look at what's happening.
+We can place a breaqkpoint on a line in the code, and the program will halt when it reaches that line.
+<P>
+Let's say we want to take a look at everything that is happening in the <CODE>closestAHDistance</CODE> method.
+Let's start by placing a breakpoint on the first line of the function body, so that we can see what's happening there. <BR>
+You can place a breakpoint by clicking just to the right of the number of the line where you want the break to occur.
+A red ball icon will appear and the line will become red. A breakpoint only has effect in debug mode: if you run the
+program using the normal green arrow, it will ignore the breakpoint. <BR>
+Let's place a breakpoint on line 37. Click on the location where the red ball is in this image:
+<P>
+<img src="images/placingabreakpoint.png"title="Placing a breakpoint">
+<P>
+Let's run the program in debug mode (the bug icon) after placing the breakpoint. This should produce the following:
+<P>
+<img src="images/runningtobreakpoint.png"title="Running to the breakpoint">
+<P>
+The program has started executing, but it stopped when it encountered the breakpoint. We can now see the variables
+that exist at this point, just as before. We can mouse-over the variables that have been created so far in the method,
+and also the parameters to the method.
+<P>
+
+<H4 CLASS="western"><A NAME="Stepping"></A>&nbsp;&nbsp;&nbsp;&nbsp;--Stepping--</H4>
+<P>
+Everything looks in order, there are no strange 'method objects' at this point yet. How do we proceed now?
+Do we remove the breakpoint place a new one on the next line, then run debug mode again? That would be very tiresome. <BR>
+Luckily, there are tools to tell the program to advance through the code slowly. These are located just above the
+Frames and Variables windows.
+<P>
+<img src="images/steppingtools.png"title="Stepping tools">
+<P>
+You can mouse-over these icons to see what they do:
+<UL>
+    <LI><P>Step over: From the current execution point, run to the next line in the file, and stop there.</P>
+    <LI><P>Step into: Enter the first method that is being called on the current line (this can bring you to another
+        method or file), and stop there.</P>
+    <LI><P>Step out: Run to the end of the method and go out to the method that called this method, then stop there.</P>
+</UL>
+<P>
+Let's try clicking 'Step into' right now.
+<P>
+<img src="images/stepinto.png"title="Step into">
+<P>
+This has brought us inside the method <CODE>getPosition</CODE> in the class <CODE>TerminalKamer</CODE>, which is the method that
+is called on the line we were just looking at, at the start of <CODE>closestAHDistance</CODE>. <BR>
+Let's click 'Step out' to finish this method call and go back to <CODE>closestAHDistance</CODE>.
+Now, take a look at the Variables window. There should be two items: <CODE>ahs</CODE> and
+<CODE>tk</CODE>. <BR>
+If you click 'Step over' now, the code will go to the next line in this method. That means that <CODE>tkpos</CODE>
+will then exist in the Variables window. Try it! <BR>
+We are now on line 38, where the culprit of our problem, the <CODE>ahPositions</CODE> list, is created.
+<P>
+
+<H4 CLASS="western"><A NAME="End boss"></A>&nbsp;&nbsp;&nbsp;&nbsp;--End boss--</H4>
+<P>
+Now that we have arrived at the place where we know something is going wrong in our code, we will start clicking
+'Step into' again, so that we can see exactly what is going on. Start by clicking it once.
+<P>
+<img src="images/listiterator.png"title="list iterator">
+<P>
+According to the Frames window, we are now inside a list comprehension function. This must be the list comprehension
+that is happening on line 38. In our Variables window, we see only a <CODE>list_iterator</CODE> - this is an
+internal variable used in the list comprehension. <BR>
+But another 'Step into' shows us that a new variable has been created: <CODE>ah</CODE>, which seems to be a
+normal looking <CODE>AlbertHeijn</CODE>:
+<P>
+<img src="images/ah.png"title="ah">
+<P>
+More 'Step intos' will show more AlbertHeijns being processed by the list comprehension. After a couple more clicks, we might be surprised to find that the view changes to this:
+<P>
+<img src="images/supplies.png"title="SUPPLIES">
+<P>
+We have exited the list comprehension function without finding anything strange.
+However, there does not yet seem to be a <CODE>ahPositions</CODE> variable. <BR>
+However when we do yet another 'Step into', it appears. And it contains the 'method object'... Where did it come from?
+Although we don't know the answer yet, we are now sure that it appeared during the list comprehension,
+thanks to debug mode.
+<P>
+When we're done looking, we can exit debug mode with the 
+<img src="images/exit.png"title="exit">
+button to the left. The unfinished program will terminate.
+<P>
+We might now want to restart debug mode to start the process over, because who knows, maybe we missed something.
+This means we have to hit the debug button again.
+<p>
+When we run through the same code again using debug mode, we might mouse-over the right part of <CODE>ah.getPosition</CODE>
+while we are in <CODE>&#60;listcomp&#62;</CODE>. This shows us, again, that this is a 'method object'.
+What this means is that we are making a list of methods, instead of a list of tuples. Why?
+Because a method call needs brackets <CODE>()</CODE> behind it in order to evaluate itself - otherwise, it's just a
+'method object': we get a list of the methods instead of a list of their results.
+But you probably had figured that out already.
+<P>
+So the fix is to change the incorrect method call:
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;<CODE CLASS="western">ahPositions = [ah.getPosition for ah in ahs]</CODE>
+<P>
+to this:
+<P>
+&nbsp;&nbsp;&nbsp;&nbsp;<CODE CLASS="western">ahPositions = [ah.getPosition() for ah in ahs]</CODE>
+<P>
+Now, our code runs just fine. The output should be 5.385164807134504 (the closest AH is about 5.39 units from the TK).
+<P>
+<A NAME="debugAH"></A>
+<BR>
+<EM><B>Problem 3 (for submission): </B></EM>
+<P>
+The file albert2.py contains a different piece of code with an error. Running the code as-is results in a stacktrace.
+It is up to you to use the debugging features discussed above to find the error in the code and fix it.
+so that the desired result is given. You should upload the corrected albert2.py file as the solution to this problem.
+<p>
+The program presented in the file also uses the Albert Heijn class, but for a different purpose.
+Namely, it tries to find the path along all of the Albert Heijns with the minimum total distance.
+The start of the path can be any of the Albert Heijns. <br>
+The program does this in a very naive way. First it generates all possible paths that pass by all of the Albert Heijns.
+It then calculates the total distance for each path and takes the path with the minimum total distance.
+Finally it prints the names of the Albert Heijns on this path in order.
+<p>
+For the five central Albert Heijns in Nijmegen, using euclidean (straight line) distance, the output should be:
+<P>
+<code>
+1 Daalseweg <BR>
+2 van Schevichavenstraat <BR>
+3 Stationsplein <BR>
+4 Groenestraat <BR>
+5 St. Jacobslaan
+</code>
+<p>
+However, as said above, the code has an error. You should fix to code, so that the desired result is produced.
+The fix can be anything you like, but it should be fairly small (not a complete rewrite of the code),
+and the resulting code should work for any set of Albert Heijns. <br>
+Try to make use of the techniques discussed earlier in this assignment. At the very least, you should place a
+breakpoint at a line in the code, then use the debugger to step through the lines while looking at the values of
+variables at different points.
+<p>
+
+<H4 CLASS="western"><A NAME="Final thoughts"></A>Final thoughts</H4>
+<P>
+We hope that the techniques described in this tutorial will be useful in the coming projects.
+Debug mode is a powerful tool, allowing you to much more easily spot problems and errors in your code. <BR>
+There are a lot of features of debug mode that we haven't discussed, such as the ability to 'watch' variables
+and methods and change the values of variables on-the-fly. If you want to learn more about debugging techniques and
+how to use them in PyCharm, you could <A href="http://www.jetbrains.com/pycharm/webhelp/debugging.html">look here</A>
+</P>
+
+</BODY>
+</HTML>

@@ -1,0 +1,700 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Unix/Python Tutorial</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.0.2.2 (Linux)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Jason Farquhar">
+	<META NAME="CHANGED" CONTENT="20130516;13105400">
+	<META NAME="CHANGEDBY" CONTENT="Jason Farquhar">
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		PRE { font-variant: normal; color: #333333 }
+		PRE.western { font-style: normal; font-weight: normal }
+		PRE.cjk { font-style: normal; font-weight: normal }
+		PRE.ctl { font-family: "Lohit Hindi", monospace; font-style: normal; font-weight: normal }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H4 { margin-left: 0.21in; margin-right: 0.21in; margin-top: 0.21in; margin-bottom: 0.1in; font-variant: normal; color: #325b9d }
+		H4.western { font-style: normal }
+		H4.cjk { font-style: normal }
+		H4.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+
+<H2 CLASS="western">Week 1: Python Tutorial</H2>
+<BLOCKQUOTE STYLE="text-align: center"><IMG SRC="images/python-logo.png" NAME="graphics1" ALIGN=BOTTOM WIDTH=580 HEIGHT=164 BORDER=0>
+</BLOCKQUOTE>
+<BLOCKQUOTE STYLE="text-align: center"><CITE>PacMan speaks Python,<BR>
+So you'll have to use it too.<BR>
+We're going to show you how.</CITE>
+</BLOCKQUOTE>
+
+<H3 CLASS="western">Introduction</H3>
+<P>This tutorial covers all the basics you need to know to work with
+Python on the machines in the computer rooms. It is based largely on the orginal
+tutorial from <BR>
+&nbsp;&nbsp;&nbsp;<A HREF="http://ai.berkeley.edu/project_overview.html">http://ai.berkeley.edu/project_overview.html</A> <BR>
+with some slight changes for our working environment.</P>
+<P>You can download all of the files associated with this tutorial <B>and</B> those for next week
+(including this and next week's tutorials) as a <A HREF="1-2-python.zip">zip
+archive</A>. 
+</P>
+<H4 CLASS="western"><A NAME="Assignment submissions"></A>Assignment submissions</H4>
+<P>Submissions (for the entire course) will be using the normal Blackboard assignment
+submission system, where for each assignment you should upload the .py file(s) containing your assignment solution. <BR>
+<B>NOTE:</B> We use <EM>Group assignments</EM> for this course, so one (any) group member will have to upload the
+answers for the group as a whole. If another member of the same group <EM>also</EM> uploads those answers later on,
+Blackboard will process that as a re-submission (overwriting the original submission).
+<P>
+For this (first) week, there is one problem:
+<A HREF="#buyLotsOfFruit"><CODE CLASS="western">buyLotsOfFruit</CODE></A>. <BR>
+But, <B>contrary to most weeks, you are not required to submit your answer to this problem right away</B>.
+Next week will have two more problems (2 and 3), and you should submit your answers to this week's problem (1)
+together with your answers to prblem 2 and 3 <B>after next week</B>. The deadline for submitting (all 3) is stated
+in the "assignments" section of Blackboard (assignment for week 1-2).
+<P>
+To familiarize yourself with the assignment submission system, it might still be useful to submit your answer to
+assignment 1 as soon as you are ready, provided you re-submit your complete answer (assignment 1, 2 and 3) before the
+deadline. This holds for the course as a whole: you can always re-submit a new (corrected) version of your answer(s),
+and that will over-write your former submission, <B>as long as you re-submit before the deadline</B>.
+<P>
+
+<H3 CLASS="western">Table of Contents</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Getting started">Getting started</A> 
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Invoking the Interpreter">Invoking the Interpreter</A> 
+		</P>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Using PyCharm">Using PyCharm</A> 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Python Basics">Python Basics</A> 
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Operators">Operators</A>
+		</P>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Strings">Strings</A> 
+		</P>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Dir and Help">Dir and Help</A> 
+		</P>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Built-in Data Structures">Built-in Data Structures</A> 
+		</P>
+		<UL>
+			<LI><P STYLE="margin-bottom: 0in"><A HREF="#Lists">Lists</A> 
+			</P>
+			<LI><P STYLE="margin-bottom: 0in"><A HREF="#Tuples">Tuples</A> 
+			</P>
+			<LI><P STYLE="margin-bottom: 0in"><A HREF="#Sets">Sets</A> 
+			</P>
+			<LI><P STYLE="margin-bottom: 0in"><A HREF="#Dictionaries">Dictionaries</A>
+			</P>
+		</UL>
+    </UL>
+    <LI><P STYLE="margin-bottom: 0in"><A HREF="#Executing Scripts">Executing Scripts</A>
+    </P>
+    <UL>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Executing from PyCharm">from PyCharm</A>
+        </P>
+        <LI><P STYLE="margin-bottom: 0in"><A HREF="#Executing from the command prompt">from the 'command prompt'</A>
+        </P>
+    </UL>
+	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Writing Scripts">Writing Scripts</A>
+	</P>
+    <UL>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Indentation">Indentation</A>
+		</P>
+		<LI><P STYLE="margin-bottom: 0in"><A HREF="#Writing Functions">Writing Functions</A> 
+		</P>
+    </UL>
+    <LI><P STYLE="margin-bottom: 0in"><A HREF="#Tips and Tricks">Tips and Tricks</A>
+	</P>
+	<LI><P STYLE="margin-bottom: 0in"><A HREF="#Troubleshooting">Troubleshooting</A>
+	</P>
+	<LI><P><A HREF="#More References">More References</A> 
+	</P>
+</UL>
+
+<H3 CLASS="western"><A NAME="Getting started"></A>Getting started</H3>
+<P>The programming assignments in this course will be written in
+<A HREF="http://www.python.org/about/">Python</A>, an interpreted,
+object-oriented language that shares some features with both Java and
+Scheme. This tutorial will walk through the primary syntactic
+constructions in Python, using short examples. 
+</P>
+<P>You may find the <A HREF="#Troubleshooting">Troubleshooting</A>
+section helpful if you run into problems. It contains a list of the
+frequent problems previous students have encountered when following
+this tutorial. 
+</P>
+<P>Like languages such as Lisp, Scheme and Prolog, Python is an interpreted language: 
+it can execute source code commands directly, without having to be compiled first.
+It can therefore be used in two modes: either by executing a source file (called a <I>script</I> in Python),
+or <I>interactively</I> by typing in commands one-by-one and having Python execute them directly.
+In the exercises below, we will first use the Python interpreter interactively, then move to writing scripts.
+</P>
+<P>But before we can start on the exercises, you should be able to invoke and use both the Python interpreter itself, 
+and the Integrated Development Environment (IDE) PyCharm that we will use for writing and executing scripts.
+</P>
+
+<H4 CLASS="western"><A NAME="Invoking the Interpreter"></A>Invoking the Interpeter</H4>
+<P>To invoke the interactive <B>Python Interpreter</B> outside of an IDE, you first need to start a 'command-prompt'. 
+In windows you find this under <BR>
+<CODE CLASS="western">Start-&gt;Accessories-&gt;System Tools-&gt;Command Prompt.</CODE>
+</P>
+<P>This will open a window like below:
+</P>
+<P><IMG SRC="images/cmdprompt.gif" NAME="graphics3" ALIGN=LEFT WIDTH=602 HEIGHT=197 BORDER=0><BR CLEAR=LEFT>
+</P>
+<P>From the 'command-prompt', you start the Python interpreter by typing the command 'python'.</P>
+<P>You can also open the python interpreter from within the IDE PyCharm by selecting "<B>Run Python Console ...</B>"
+from the "<B>Tools</B>" menu. See next section for more on the PyCharm IDE.</P>
+<P>Either way you will be presented with a message looking something like
+the following (the actual numbers may vary depending on the python
+version installed and operating system you are running on):
+</P>
+<P>	<CODE CLASS="western">Python 3.4.0 (v3.4.0:04f714765c13, Mar 15 2014, 23:02:41)<BR>
+[GCC 3.4.6] on sunos5<BR>
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or
+&quot;license&quot; for more information.<BR>
+&gt;&gt;&gt;</CODE>
+</P>
+
+<H4 CLASS="western"><A NAME="Using PyCharm"></A>Using PyCharm</H4>
+<P><A HREF="http://www.jetbrains.com/pycharm/documentation/">PyCharm</A> is an
+Integrated Development Environment for developing Python programs. On
+the Windows computers used for our exercises you can start PyCharm
+from the start menu: <BR>
+&nbsp;&nbsp;&nbsp; <CODE>start -&gt; all programmes -&gt; jetBrains -&gt; pyCharm</CODE> <BR>
+<B>NOTE: double-clicking on a .py file will probably open a different IDE (IDLE) by default,
+which can also be used, but is not as good!</B> In that case, you have to set the default application for
+opening files with .py extension to PyCharm. <BR>
+If you decide to use IDLE instead of PyCharm, you're on your own!
+</P>
+<P>When you start PyCharm for the first time, you have to tell it which version of Python to use: <BR>
+&nbsp;&nbsp;&nbsp; <CODE>Configure -&gt; Preferences -&gt; Project interpreter -&gt; Python interpreters </CODE> <BR>
+will show a window where you can click '+' at the top right to select a Python version. <BR>
+<B>Be sure to select Python 3.4, NOT 'psyPython' which is Python 2.7!</B>
+</P>
+<P>Pycharm works with 'projects', which are sets of all (.py and other) files needed to
+run some application. On the file system, these files reside in a folder/directory with the name of the project,
+which itself is usually a subdirectory of the directory 'PycharmProjects' within your home directory.
+</P>
+<P>When PyCharm is started for the first time, it will open without a project.
+If you already have a folder with the relevant files for a project, you can use <CODE>File-&gt;Open Directory...</CODE>
+to make PyCharm use that as a project: after loading you will see all files in the folder listed on the left side. <BR>
+If you don't already have a project-folder, you can get PyCharm to make (an empty) one within the PycharmProjects folder
+with the menu option <CODE>File-&gt;New Project...</CODE>.
+You can then add (empty) .py files from within PyCharm with the menu option <CODE>File-&gt;New...</CODE>,
+or copy existing .py files to the project-folder from outside PyCharm.
+</P>
+<P> After the first time, when you start PyCharm it will remember which project(s) were open at the last session,
+and load it/them automatically.
+</P>
+<P>Files can be edited by double-clicking on their name in the project list (on the left).
+They will be loaded into the editing window with
+<A HREF="http://en.wikipedia.org/wiki/Syntax_highlighting">syntax-highlighting</A> enabled.
+</P>
+<P>For information on how to run the .py files you've written or edited,
+see the section <A HREF="#Executing Scripts">Executing Scripts</A>.
+</P>
+<P>At any point, you can open an interactive Python interpreter window with <CODE>Tools-&gt;Run Python Console...</CODE>
+</P>
+
+<H3 CLASS="western"><A NAME="Python Basics"></A>Python Basics</H3>
+<P>For this first part, we will use the interactive Python interpreter (see above).
+</P>
+
+<H4 CLASS="western"><A NAME="Operators"></A>Operators</H4>
+<P>The Python interpeter can be used to evaluate expressions, for
+example simple arithmetic expressions. If you enter such expressions
+at the prompt (<CODE CLASS="western">&gt;&gt;&gt;</CODE>) they will
+be evaluated and the result wil be returned on the next line. <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+1 + 1 <BR>2 <BR>&gt;&gt;&gt; 2 * 3 <BR>6 <BR><BR></CODE>Boolean
+operators also exist in Python to manipulate the primitive <CODE CLASS="western">True</CODE>
+and <CODE CLASS="western">False</CODE> values. <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+1==0 <BR>False <BR>&gt;&gt;&gt; not (1==0) <BR>True <BR>&gt;&gt;&gt;
+(2==2) and (2==3) <BR>False <BR>&gt;&gt;&gt; (2==2) or (2==3) <BR>True
+</CODE>
+</P>
+
+<H4 CLASS="western"><A NAME="Strings"></A>Strings</H4>
+<P>Like Java, Python has a built in string type. The <CODE CLASS="western">+</CODE>
+operator is overloaded to do string concatenation on string values.
+<CODE CLASS="western"><BR><BR>&gt;&gt;&gt; 'artificial' +
+&quot;intelligence&quot; <BR>'artificialintelligence' <BR></CODE><BR>There
+are many built-in methods which allow you to manipulate strings.
+<BR><BR><CODE CLASS="western">&gt;&gt;&gt;
+'artificial'.upper()<BR>'ARTIFICIAL'<BR>&gt;&gt;&gt;
+'HELP'.lower()<BR>'help'<BR>&gt;&gt;&gt; len(&quot;Help&quot;)<BR>4 </CODE><BR><BR>Notice
+that we can use either single quotes <CODE CLASS="western">' '</CODE>
+or double quotes <CODE CLASS="western">&quot; &quot;</CODE> to
+surround string. This allows for using quotes within strings: <BR><BR>
+<CODE CLASS="western">&gt;&gt;&gt; print( "It's a mad world") <BR>
+It's a mad world <BR><BR>
+We can also store expressions into variables. <BR><BR>
+<CODE CLASS="western">&gt;&gt;&gt; s = 'hello world' <BR>
+&gt;&gt;&gt; print(s) <BR>
+hello world <BR>
+&gt;&gt;&gt; s.upper()<BR>'HELLO WORLD'<BR>
+&gt;&gt;&gt; len(s.upper())<BR>
+11<BR>
+&gt;&gt;&gt; num = 8.0 <BR>
+&gt;&gt;&gt; num += 2.5 <BR>
+&gt;&gt;&gt; print(num) <BR>
+10.5 </CODE>
+<P>
+In Python, you do not have to declare variables
+before you assign to them.
+<P>
+<EM><B>Exercise: </B></EM>Learn about the methods Python provides for strings.
+<P>
+
+<H4 CLASS="western"><A NAME="Dir and Help"></A>Dir and Help</H4>
+<P>To see what methods Python provides for a datatype,
+use the <CODE CLASS="western">dir</CODE> and <CODE CLASS="western">help</CODE> commands: <BR><BR>
+<CODE CLASS="western">&gt;&gt;&gt; s = 'abc' <BR><BR>
+&gt;&gt;&gt; dir(s)<BR>
+['__add__', '__class__', '__contains__', '__delattr__',
+'__doc__', '__eq__', '__ge__', '__getattribute__', '__getitem__',
+'__getnewargs__', '__getslice__', '__gt__', '__hash__',
+'__init__','__le__', '__len__', '__lt__', '__mod__', '__mul__',
+'__ne__', '__new__', '__reduce__', '__reduce_ex__','__repr__',
+'__rmod__', '__rmul__', '__setattr__', '__str__', 'capitalize',
+'center', 'count', 'decode', 'encode', 'endswith', 'expandtabs',
+'find', 'index', 'isalnum', 'isalpha', 'isdigit', 'islower',
+'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip',
+'replace', 'rfind','rindex', 'rjust', 'rsplit', 'rstrip', 'split',
+'splitlines', 'startswith', 'strip', 'swapcase', 'title',
+'translate', 'upper', 'zfill']
+    <BR><BR>
+&gt;&gt;&gt; help(s.find)</CODE>
+<PRE CLASS="western"><CODE CLASS="western">Help on built-in function find:</CODE>
+<CODE CLASS="western">    </CODE>
+<CODE CLASS="western">find(...) method of builtins.str instance</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">S.find(sub[, start[, end]]) -&gt; int</CODE>
+<CODE CLASS="western">    </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">Return the lowest index in S where substring sub is found,</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">such that sub is contained within s[start,end].  Optional</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">arguments start and end are interpreted as in slice notation.</CODE>
+<CODE CLASS="western">    </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">Return -1 on failure.</CODE></PRE>
+<P>
+<CODE CLASS="western">&gt;&gt;&gt; s.find('b')<BR>1</CODE>
+<P>
+Try out some of the string functions listed in <CODE CLASS="western">dir</CODE>
+(ignore those with underscores '_' around the method name, they are internal private helper functions).
+<P>
+
+<H4 CLASS="western"><A NAME="Built-in Data Structures"></A>Built-in
+Data Structures</H4>
+<P>Python comes equipped with some useful built-in data structures,
+broadly similar to Java's collections package. 
+<P>
+
+<H4 CLASS="western"><A NAME="Lists"></A>&nbsp;&nbsp;&nbsp;&nbsp;-- Lists --</H4>
+<P><EM>Lists</EM> store a sequence of mutable items: <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+fruits = ['apple','orange','pear','banana']<BR>&gt;&gt;&gt; fruits[0]
+<BR>'apple'<BR><BR></CODE>We can use the <CODE CLASS="western">+</CODE>
+operator to do list concatenation: <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+otherFruits = ['kiwi','strawberry']<BR>&gt;&gt;&gt; fruits +
+otherFruits<BR>&gt;&gt;&gt; ['apple', 'orange', 'pear', 'banana',
+'kiwi', 'strawberry']<BR><BR></CODE>Python also allows
+negative-indexing from the back of the list. For instance, <CODE CLASS="western">fruits[-1]</CODE>
+will access the last element <CODE CLASS="western">'banana'</CODE>:
+<CODE CLASS="western"><BR><BR>&gt;&gt;&gt; fruits[-2]<BR>'pear'<BR>&gt;&gt;&gt;
+fruits.pop()<BR>'banana'<BR>&gt;&gt;&gt; fruits<BR>['apple',
+'orange', 'pear']<BR>&gt;&gt;&gt; fruits.append('grapefruit') <BR>&gt;&gt;&gt;
+fruits <BR>['apple', 'orange', 'pear', 'grapefruit'] <BR>&gt;&gt;&gt;
+fruits[-1] = 'pineapple' <BR>&gt;&gt;&gt; fruits <BR>['apple',
+'orange', 'pear', 'pineapple'] <BR></CODE><BR>We can also index
+multiple adjacent elements using the slice operator. For instance
+<CODE CLASS="western">fruits[1:3]</CODE> which returns a list
+containing the elements at position 1 and 2. In general
+<CODE CLASS="western">fruits[start:stop]</CODE> will get the elements
+in <CODE CLASS="western">start, start+1, ..., stop-1</CODE>. We can
+also do <CODE CLASS="western">fruits[start:]</CODE> which returns all
+elements starting from the <CODE CLASS="western">start</CODE> index.
+Also <CODE CLASS="western">fruits[:end]</CODE> will return all
+elements before the element at position <CODE CLASS="western">end</CODE>:
+<CODE CLASS="western"><BR><BR>&gt;&gt;&gt; fruits[0:2] <BR>['apple',
+'orange'] <BR>&gt;&gt;&gt; fruits[:3]<BR>['apple', 'orange', 'pear']
+<BR>&gt;&gt;&gt; fruits[2:]<BR>['pear', 'pineapple'] <BR>&gt;&gt;&gt;
+len(fruits) <BR>4 <BR><BR></CODE>The items stored in lists can be any
+Python data type. So for instance we can have lists of lists: <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+lstOfLsts = [['a','b','c'],[1,2,3],['one','two','three']] <BR>&gt;&gt;&gt;
+lstOfLsts[1][2] <BR>3<BR>&gt;&gt;&gt; lstOfLsts[0].pop()<BR>'c'<BR>&gt;&gt;&gt;
+lstOfLsts<BR>[['a', 'b'],[1, 2, 3],['one', 'two',
+'three']]<BR><BR></CODE><BR><EM><B>Exercise:</B></EM> Play with some
+of the list functions. You can find the methods you can call on an
+object via the <CODE CLASS="western">dir</CODE> and get information
+about them via the <CODE CLASS="western">help</CODE> command: <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+dir(list)<BR>['__add__', '__class__', '__contains__', '__delattr__',
+'__delitem__', <BR>'__delslice__', '__doc__', '__eq__', '__ge__',
+'__getattribute__', <BR>'__getitem__', '__getslice__', '__gt__',
+'__hash__', '__iadd__', '__imul__', <BR>'__init__', '__iter__',
+'__le__', '__len__', '__lt__', '__mul__', '__ne__', <BR>'__new__',
+'__reduce__', '__reduce_ex__', '__repr__', '__reversed__',
+<BR>'__rmul__', '__setattr__', '__setitem__', '__setslice__',
+'__str__', <BR>'append', 'count', 'extend', 'index', 'insert', 'pop',
+'remove', 'reverse', <BR>'sort']</CODE></P>
+<PRE CLASS="western">&gt;&gt;&gt; help(list.reverse)
+Help on built-in function reverse:
+
+reverse(...)
+    L.reverse() -- reverse *IN PLACE*</PRE><P>
+<CODE CLASS="western">&gt;&gt;&gt; lst = ['a','b','c']<BR>&gt;&gt;&gt;
+lst.reverse()<BR>&gt;&gt;&gt; ['c','b','a']<BR><BR></CODE>Note:
+Ignore functions with underscores &quot;_&quot; around the names;
+these are private helper methods. 
+</P>
+
+<H4 CLASS="western"><A NAME="Tuples"></A>&nbsp;&nbsp;&nbsp;&nbsp;-- Tuples --</H4>
+<P>A data structure similar to the list is the <EM>tuple</EM>, which
+is like a list except that it is immutable (i.e. once it is created,
+you cannot change its content anymore). Note that tuples are
+surrounded with parentheses while lists have square brackets. <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+pair = (3,5)<BR>&gt;&gt;&gt; pair[0]<BR>3<BR>&gt;&gt;&gt; x,y =
+pair<BR>&gt;&gt;&gt; x<BR>3<BR>&gt;&gt;&gt; y<BR>5 <BR>&gt;&gt;&gt;
+pair[1] = 6<BR>TypeError: object does not support item
+assignment<BR><BR></CODE>The attempt to modify an immutable structure
+raised an exception. Exceptions indicate errors: index out of bounds
+errors, type errors, and so on will all report exceptions in this
+way. 
+</P>
+
+<H4 CLASS="western"><A NAME="Sets"></A>&nbsp;&nbsp;&nbsp;&nbsp;-- Sets --</H4>
+<P>A <EM>set</EM> is another data structure that serves as an
+unordered list with no duplicate items. Below, we show how to create
+a set, add things to the set, test if an item is in the set, and
+perform common set operations (difference, intersection, union):
+<CODE CLASS="western"><BR><BR>&gt;&gt;&gt; shapes =
+['circle','square','triangle','circle']<BR>&gt;&gt;&gt; setOfShapes =
+set(shapes)<BR>&gt;&gt;&gt; setOfShapes
+<BR>set(['circle','square','triangle']) <BR>&gt;&gt;&gt;
+setOfShapes.add('polygon') <BR>&gt;&gt;&gt; setOfShapes
+<BR>set(['circle','square','triangle','polygon']) <BR>&gt;&gt;&gt;
+'circle' in setOfShapes <BR>True <BR>&gt;&gt;&gt; 'rhombus' in
+setOfShapes <BR>False <BR>&gt;&gt;&gt; favoriteShapes =
+['circle','triangle','hexagon']<BR>&gt;&gt;&gt; setOfFavoriteShapes =
+set(favoriteShapes)<BR>&gt;&gt;&gt; setOfShapes - setOfFavoriteShapes
+<BR>set(['square','polygon']) <BR>&gt;&gt;&gt; setOfShapes &amp;
+setOfFavoriteShapes <BR>set(['circle','triangle'])<BR>&gt;&gt;&gt;
+setOfShapes | setOfFavoriteShapes
+<BR>set(['circle','square','triangle','polygon','hexagon']) <BR><BR></CODE><B>Note
+that the objects in the set are unordered; you cannot assume that
+their traversal or print order will be the same across machines!</B> 
+</P>
+
+<H4 CLASS="western"><A NAME="Dictionaries"></A>&nbsp;&nbsp;&nbsp;&nbsp;-- Dictionaries --</H4>
+<P>The last built-in data structure is the <EM>dictionary</EM> which
+stores a map from one type of object (the key) to another (the
+value). The key must be an immutable type (string, number, or tuple).
+The value can be any Python data type.
+<BR><BR>
+<B>Note:</B> In the example below, the printed order of the keys returned by Python could
+be different than shown below. The reason is that unlike lists which
+have a fixed ordering, a dictionary is simply a hash table for which
+there is no fixed ordering of the keys (see the <A HREF="http://inst.eecs.berkeley.edu/~cs188/sp09/faq.html">FAQ
+about dictionary key ordering</A>).
+<BR><BR>
+<CODE CLASS="western">
+&gt;&gt;&gt; studentIds = {'knuth': 42.0, 'turing': 56.0, 'nash': 92.0 } <BR>
+&gt;&gt;&gt; studentIds['turing'] <BR>
+56.0 <BR>
+&gt;&gt;&gt; studentIds['nash'] = 'ninety-two'<BR>
+&gt;&gt;&gt; studentIds <BR>
+{'knuth': 42.0, 'turing': 56.0, 'nash': 'ninety-two'} <BR>
+&gt;&gt;&gt; del studentIds['knuth'] <BR>
+&gt;&gt;&gt; studentIds <BR>
+{'turing': 56.0, 'nash': 'ninety-two'} <BR>
+&gt;&gt;&gt; studentIds['knuth'] = [42.0,'forty-two'] <BR>
+&gt;&gt;&gt; studentIds <BR>
+{'knuth': [42.0, 'forty-two'], 'turing': 56.0, 'nash': 'ninety-two'} <BR>
+&gt;&gt;&gt; studentIds.keys() <BR>
+dict_keys(['knuth', 'turing', 'nash']) <BR>
+&gt;&gt;&gt; studentIds.values() <BR>
+dict_values([[42.0, 'forty-two'], 56.0, 'ninety-two']) <BR>
+&gt;&gt;&gt; studentIds.items() <BR>
+dict_items([('knuth',[42.0, 'forty-two']), ('turing',56.0), ('nash','ninety-two')])<BR>
+&gt;&gt;&gt; len(studentIds) <BR>
+3
+</CODE>
+</P>
+<P>As with nested lists, you can also create dictionaries of dictionaries.
+</P>
+<P><EM><B>Exercise:</B></EM> Use <CODE CLASS="western">dir</CODE> and
+<CODE CLASS="western">help</CODE> to learn about the functions you
+can call on dictionaries. 
+</P>
+
+<H3 CLASS="western"><A NAME="Executing Scripts"></A>Executing Scripts</H3>
+<P>There are 2 main ways to execute a .py file that you have written.
+</P>
+
+<H4 CLASS="western"><A name="Executing from PyCharm"></A>Executing .py files from PyCharm</H4>
+<P>Any .py file that is open in the PyCharm editor window can be executed by selecting the menu option <BR>
+&nbsp;&nbsp;&nbsp; <CODE>Run-&gt;Run...</CODE> <BR>
+and clicking on the name of the file (shown without the '.py' bit) that you want to run. <BR>
+<B>But note</B> that executing a file in this way does not by default give you the
+ability to specify additional 'command line' options, which you will often need. However, we
+have modified the examples in this course such that if executed in this
+way you will be asked for the options at the PyCharm prompt. For
+example you should see something like: <BR>
+&nbsp;&nbsp;&nbsp;<CODE> &gt;&gt;&gt; <BR>
+&nbsp;&nbsp;&nbsp;Enter any command line arguments?</CODE> <BR>
+You can now just type in the arguments you want to use, and hit 'enter'
+to continue executing your .py file.
+</P>
+
+<H4 CLASS="western"><A name="Executing from the command prompt"></A>Executing .py files from the 'command prompt'</H4>
+<P>You can also invoke python directly to
+execute your .py file from outside PyCharm. To do so you need to first
+start a 'command prompt'. <BR>
+To execute your .py file you then need to change directory to the
+directory where your .py exists. You do this using the 'cd' command.
+<P>
+So if, for example, your file <CODE>example.py</CODE> was saved in
+<P>
+<CODE><SPAN>C:\Documents and Settings\user\PycharmProjects\IAI-B\pythonTutorial</SPAN></CODE>
+<P>
+you would first do
+<P>
+<CODE><SPAN>cd C:\Documents and Settings\user\PycharmProjects\IAI-B\pythonTutorial</SPAN></CODE>
+<P>
+If this directory exists you should see the command prompt (the bit before where you type) change to:
+<P>
+<CODE><SPAN>C:\Documents and Settings\user\PycharmProjects\IAI-B\pythonTutorial &gt;</SPAN></CODE>
+<P>
+Now you can run your .py file by typing: <CODE><SPAN>python example.py</SPAN></CODE>
+<P>
+You can also execute your file with command line options by simply adding them to the above line. <BR>
+For example to add 2 options 'option1' and 'option2' use: <CODE><SPAN>python example.py option1 option2</SPAN></CODE>
+<P>
+
+<H3 CLASS="western"><A NAME="Writing Scripts"></A>Writing Scripts</H3>
+<P>Now that you've got a handle on how to use Python interactively and how to invoke Python on scripts, let's
+write a simple Python script that demonstrates Python's <CODE CLASS="western">for</CODE>
+loop. Open the file called <CODE CLASS="western"><A HREF="foreach.py">foreach.py</A></CODE>
+and update it with the following code: 
+</P>
+<PRE CLASS="western"><CODE CLASS="western"># This is what a comment looks like </CODE>
+<CODE CLASS="western">fruits = ['apples','oranges','pears','bananas']</CODE>
+<CODE CLASS="western">for fruit in fruits:</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">print(fruit + ' for sale')</CODE>
+
+<CODE CLASS="western">fruitPrices = {'apples': 2.00, 'oranges': 1.50, 'pears': 1.75}</CODE>
+<CODE CLASS="western">for fruit, price in fruitPrices.items():</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">if price &lt; 2.00:</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">print('%s cost %f a pound' % (fruit, price))</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">else:</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">print(fruit + ' are too expensive!')</CODE></PRE><P>
+At the command line, use the following command in the directory
+containing <CODE CLASS="western"><A HREF="foreach.py">foreach.py</A></CODE>:
+<CODE CLASS="western"><BR><BR></CODE><CODE CLASS="western">&gt;
+</CODE><CODE CLASS="western">python foreach.py<BR>apples for
+sale<BR>oranges for sale<BR>pears for sale<BR>bananas for
+sale<BR>oranges cost 1.500000 a pound<BR>pears cost 1.750000 a
+pound<BR>apples are too expensive!<BR></CODE><BR>Remember that the
+print statements listing the costs may be in a different order on
+your screen than in this tutorial; that's due to the fact that we're
+looping over dictionary keys, which are unordered. To learn more
+about control structures (e.g., <CODE CLASS="western">if</CODE> and
+<CODE CLASS="western">else</CODE>) in Python, check out the official
+<A HREF="http://docs.python.org/tut/">Python tutorial section on this
+topic</A>.<BR><BR>If you like functional programming (like Scheme)
+you might also like <CODE CLASS="western">map</CODE> and <CODE CLASS="western">filter</CODE>:
+<code class="western"><br><br>&gt;&gt;&gt; list(map(lambda x: x * x,
+[1,2,3]))<br>[1, 4, 9]<br>&gt;&gt;&gt; list(filter(lambda x: x &gt; 3,
+[1,2,3,4,5,4,3,2,1]))<br>[4, 5, 4]<br></code><BR>
+You can <A HREF="http://www.secnetix.de/olli/Python/lambda_functions.hawk">learn
+more about <CODE CLASS="western">lambda</CODE></A> if you're
+interested. The next snippet of code demonstrates python's <EM>list
+comprehension</EM> construction: 
+</P>
+<PRE CLASS="western"><CODE CLASS="western">nums = [1,2,3,4,5,6]</CODE>
+<CODE CLASS="western">plusOneNums = [x+1 for x in nums]</CODE>
+<CODE CLASS="western">oddNums = [x for x in nums if x % 2 == 1]</CODE>
+<CODE CLASS="western">print(oddNums)</CODE>
+<CODE CLASS="western">oddNumsPlusOne = [x+1 for x in nums if x % 2 ==1]</CODE>
+<CODE CLASS="western">print(oddNumsPlusOne)</CODE></PRE><P>
+This code is in a file called <CODE CLASS="western"><A HREF="listcomp.py">listcomp.py</A></CODE>,
+which you can run: <CODE CLASS="western"><BR><BR>[cs188-ta@midway ~]$
+python listcomp.py<BR>[1,3,5]<BR>[2,4,6]<BR><BR></CODE>Those of you
+familiar with Scheme, will recognize that the list comprehension is
+similar to the <CODE CLASS="western">map</CODE> function. In Scheme,
+the first list comprehension would be written as: 
+</P>
+<PRE CLASS="western">(define nums '(1,2,3,4,5,6))
+(map 
+   (lambda (x) (+ x 1))  nums)</PRE><P>
+<EM><B>Exercise:</B></EM> Write a list comprehension which, from a
+list, generates a lowercased version of each string that has length
+greater than five. Solution: <CODE CLASS="western"><A HREF="listcomp2.py">listcomp2.py</A></CODE>
+</P>
+<H4 CLASS="western"><A NAME="Indentation"></A>Beware of Indentation!</H4>
+<P>Unlike many other languages, Python uses the indentation in the
+source code for interpretation. So for instance, for the following
+script: 
+</P>
+<PRE CLASS="western">if 0 == 1: 
+    print('We are in a world of arithmetic pain')
+print('Thank you for playing') </PRE><P>
+will output <CODE CLASS="western"><BR><BR>
+Thank you for playing</CODE> <BR><BR>
+But if we had written the script as
+</P>
+<PRE CLASS="western"><CODE CLASS="western">if 0 == 1: </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">print('We are in a world of arithmetic pain')</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">print('Thank you for playing')</CODE></PRE><P>
+there would be no output. The moral of the story: be careful how you
+indent! It's best to use four spaces for indentation -- that's what the course code uses.
+</P>
+<H4 CLASS="western"><A NAME="Writing Functions"></A>Writing Functions</H4>
+<P>As in Scheme or Java, in Python you can define your own functions:
+</P>
+<PRE CLASS="western"><CODE CLASS="western">fruitPrices = {'apples':2.00, 'oranges': 1.50, 'pears': 1.75}</CODE>
+
+<CODE CLASS="western">def buyFruit(fruit, numPounds):</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">if fruit not in fruitPrices:</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">print(&quot;Sorry we don't have %s&quot; % (fruit))</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">else:</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">cost = fruitPrices[fruit] * numPounds</CODE>
+<CODE CLASS="western">        </CODE><CODE CLASS="western">print(&quot;That'll be %f please&quot; % (cost))</CODE>
+
+<CODE CLASS="western"># Main Function</CODE>
+<CODE CLASS="western">if __name__ == '__main__':        </CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">buyFruit('apples',2.4)</CODE>
+<CODE CLASS="western">    </CODE><CODE CLASS="western">buyFruit('coconuts',2)        </CODE></PRE>
+<P>
+<A NAME="buyLotsOfFruit"></A>Rather than having a <CODE CLASS="western">main</CODE>
+function as in Java, the <CODE CLASS="western">__name__ == '__main__'</CODE>
+check is used to delimit expressions which are executed when the file
+is called as a script from the command line. The code after the main
+check is thus the same sort of code you would put in a <CODE CLASS="western">main</CODE>
+function in Java.
+<P>
+Save this script as <EM>fruit.py</EM> and
+run it:
+<P>
+<CODE CLASS="western">&gt; python fruit.py <BR>
+That'll be 4.800000 please <BR>
+Sorry we don't have coconuts </CODE>
+<P>
+<BR>
+<EM><B>Problem 1 (for submission):</B></EM>
+<P>
+Add a <CODE CLASS="western">buyLotsOfFruit(orderList)</CODE> function
+to <CODE CLASS="western"><A HREF="buyLotsOfFruit.py">buyLotsOfFruit.py</A></CODE>
+which takes a list of <CODE CLASS="western">(fruit,weightInPounds)</CODE>
+tuples and returns the cost of your list. <BR>
+If there is some <CODE CLASS="western">fruit</CODE>
+in the list which doesn't appear in <CODE CLASS="western">fruitPrices</CODE>
+it should print an error message and return <CODE CLASS="western">None</CODE>
+(which is like <CODE CLASS="western">nil</CODE> in Scheme). <BR>
+Please do not change the <CODE CLASS="western">fruitPrices</CODE> variable!
+<P>
+<EM>Test Case:</EM> We will check your code by testing that the script correctly outputs:
+<P>
+<CODE CLASS="western">Cost of [('apples', 2.0), ('pears', 3.0),
+('limes', 4.0)] is 12.25</CODE>
+<P>
+<EM><B>Advanced Exercise:</B></EM>
+Write a <CODE CLASS="western">quickSort</CODE> function in Python
+using list comprehensions. Use the first element as the pivot.
+Solution: <CODE CLASS="western"><A HREF="quickSort.py">quickSort.py</A></CODE>
+<P>
+
+<H3 CLASS="western"><A NAME="Tips and Tricks"></A>More Python Tips and Tricks</H3>
+<P>This tutorial has briefly touched on some major aspects of Python
+that will be relevant to the course. Here's some more useful tidbits:
+</P>
+<UL>
+	<LI><P>Use <CODE CLASS="western">range</CODE> to generate a sequence
+	of integers, useful for generating traditional indexed <CODE CLASS="western">for</CODE>
+	loops: 
+	</P>
+	<PRE CLASS="western">for index in range(3):
+    print(lst[index])</PRE>
+	<LI><P>After importing a file, if you edit a source file, the
+	changes will not be immediately propagated in the interpreter. For
+	this, use the <CODE CLASS="western">reload</CODE> command: <CODE CLASS="western"><BR><BR>&gt;&gt;&gt;
+	reload(shop)</CODE></P>
+</UL>
+
+<H3 CLASS="western"><A NAME="Troubleshooting"></A>Troubleshooting</H3>
+<P>These are some problems (and their solutions) that new python
+learners commonly encounter. 
+</P>
+<UL>
+	<LI><P><B>Problem:</B><BR>ImportError: No module named py</P>
+	<P STYLE="margin-bottom: 0in"><B>Solution:</B><BR>When using <CODE CLASS="western">import</CODE>,
+	do not include the &quot;.py&quot; from the filename. <BR>For
+	example, you should say: <CODE CLASS="western">import shop</CODE>
+	<BR>NOT: <CODE CLASS="western">import shop</CODE><CODE CLASS="western"><B>.py</B></CODE>
+		</P>
+	<LI><P><B>Problem:</B><BR>NameError: name 'MY VARIABLE' is not
+	defined<BR>Even after importing you may see this.</P>
+	<P STYLE="margin-bottom: 0in"><B>Solution:</B><BR>To access a member
+	of a module, you have to type <CODE CLASS="western">MODULE
+	NAME.MEMBER NAME</CODE>, where <CODE CLASS="western">MODULE NAME</CODE>
+	is the name of the <CODE CLASS="western">.py</CODE> file, and <CODE CLASS="western">MEMBER
+	NAME</CODE> is the name of the variable (or function) you are trying
+	to access. 
+	</P>
+	<LI><P><B>Problem:</B><BR>TypeError: 'dict' object is not callable</P>
+	<P STYLE="margin-bottom: 0in"><B>Solution:</B><BR>Dictionary looks
+	up are done using square brackets: [ and ]. NOT parenthesis: ( and
+	). 
+	</P>
+	<LI><P><B>Problem:</B><BR>ValueError: too many values to unpack</P>
+	<P><B>Solution:</B><BR>Make sure the number of variables you are
+	assigning in a <CODE CLASS="western">for</CODE> loop matches the
+	number of elements in each item of the list. Similarly for working
+	with tuples. 
+	</P>
+	<P>For example, if <CODE CLASS="western">pair</CODE> is a tuple of
+	two elements (e.g. <CODE CLASS="western">pair =('apple', 2.0)</CODE>)
+	then the following code would cause the &quot;too many values to
+	unpack error&quot;:<BR><CODE CLASS="western">(a,b,c) = pair</CODE></P>
+	<P>Here is a problematic scenario involving a <CODE CLASS="western">for</CODE>
+	loop:</P>
+	<PRE CLASS="western">pairList = [('apples', 2.00), ('oranges', 1.50), ('pears', 1.75)]
+for fruit, price, <EM>color</EM> in pairList:
+    print('%s fruit costs %f and is the color %s' % (fruit, price, color))</PRE>
+	<LI><P><B>Problem:</B><BR>AttributeError: 'list' object has no
+	attribute 'length' (or something similar)</P>
+	<P STYLE="margin-bottom: 0in"><B>Solution:</B><BR>Finding length of
+	lists is done using <CODE CLASS="western">len(NAME OF LIST)</CODE>. 
+	</P>
+	<LI><P><B>Problem:</B><BR>Changes to a file are not taking effect.</P>
+	<P STYLE="margin-bottom: 0in"><B>Solution:</B></P>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0in">Make sure you are saving all your files after any changes. </P>
+		<LI><P>If you are editing a file in a window different from the one
+		you are using to execute python, make sure you <CODE CLASS="western">reload(</CODE><CODE CLASS="western"><I>YOUR_MODULE</I></CODE><CODE CLASS="western">)</CODE>
+		to guarantee your changes are being reflected. <CODE CLASS="western">reload</CODE>
+		works similar to <CODE CLASS="western">import</CODE>. </P>
+	</OL>
+</UL>
+
+<H3 CLASS="western"><A NAME="More References"></A>More References!</H3>
+<UL>
+	<LI><P>The place to go for more Python information: <A HREF="http://www.python.org/">www.python.org</A></P>
+	<LI><P>A good reference book: <A HREF="http://oreilly.com/catalog/9780596513986/">Learning Python</A></P>
+</UL>
+
+</BODY>
+</HTML>
