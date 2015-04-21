@@ -73,12 +73,33 @@ class ReflexAgent(Agent):
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-
-
-        print successorGameState.getScore()
+        ghostDistanceScore = 0
+        for ghostState in newGhostStates:
+            dist = distancePointToPoint(newPos, ghostState.getPosition())
+            if dist < 2:
+                ghostDistanceScore = -10
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        return successorGameState.getScore() - distanceToClosestPoint(newPos, newFood.asList()) + ghostDistanceScore
+
+def distanceToClosestPoint(p1, list):
+    if len(list) == 0:
+        return 0
+
+    distance = distancePointToPoint(p1, list[0])
+    for p2 in list:
+        newDist = distancePointToPoint(p1,p2)
+        if (distance > newDist):
+            distance = newDist
+
+    return distance
+
+def distancePointToPoint(p1,p2):
+    import math
+    return math.fabs(p1[0] - p2[0]) + math.fabs(p1[1]- p2[1])
+
+
+
 
 def scoreEvaluationFunction(currentGameState):
     """
@@ -88,8 +109,6 @@ def scoreEvaluationFunction(currentGameState):
       This evaluation function is meant for use with adversarial search agents
       (not reflex agents).
     """
-
-
 
     return currentGameState.getScore()
 

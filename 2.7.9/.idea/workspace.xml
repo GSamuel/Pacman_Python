@@ -27,8 +27,8 @@
       <file leaf-file-name="pacman.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/multiagent/pacman.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61893207" vertical-offset="1462" max-vertical-offset="11730">
-              <caret line="101" column="31" selection-start-line="101" selection-start-column="31" selection-end-line="101" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.2985437" vertical-offset="11318" max-vertical-offset="11730">
+              <caret line="673" column="0" selection-start-line="673" selection-start-column="0" selection-end-line="673" selection-end-column="0" />
               <folding>
                 <element signature="e#1979#2009#0" expanded="true" />
               </folding>
@@ -36,11 +36,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="game.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/multiagent/game.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.9387755" vertical-offset="2353" max-vertical-offset="12444">
+              <caret line="147" column="24" selection-start-line="147" selection-start-column="24" selection-end-line="147" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="multiAgents.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/multiagent/multiAgents.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="797" max-vertical-offset="3094">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1105" max-vertical-offset="3417">
+              <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -177,25 +187,6 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
-    <configuration default="false" name="searchAgents" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Pacman/search" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="2.7.9" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Pacman/search/searchAgents.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
     <configuration default="false" name="pacman (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -209,9 +200,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="2.7.9" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/multiagent/pacman.py" />
-      <option name="PARAMETERS" value="-p ReflexAgent -l testClassic" />
+      <option name="PARAMETERS" value="--frameTime 0 -p ReflexAgent -k 2" />
       <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PyDebugRunner" />
       <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PyDebugRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -228,6 +221,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="2.7.9" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/multiagent/multiAgents.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="game" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/multiagent" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="2.7.9" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/multiagent/game.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <RunnerSettings RunnerId="PythonRunner" />
@@ -359,17 +371,17 @@
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.autograder" />
       <item index="1" class="java.lang.String" itemvalue="Python.pacman" />
-      <item index="2" class="java.lang.String" itemvalue="Python.searchAgents" />
-      <item index="3" class="java.lang.String" itemvalue="Python.pacman (1)" />
-      <item index="4" class="java.lang.String" itemvalue="Python.multiAgents" />
+      <item index="2" class="java.lang.String" itemvalue="Python.pacman (1)" />
+      <item index="3" class="java.lang.String" itemvalue="Python.multiAgents" />
+      <item index="4" class="java.lang.String" itemvalue="Python.game" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.pacman (1)" />
-        <item index="1" class="java.lang.String" itemvalue="Python.multiAgents" />
-        <item index="2" class="java.lang.String" itemvalue="Python.pacman" />
-        <item index="3" class="java.lang.String" itemvalue="Python.autograder" />
-        <item index="4" class="java.lang.String" itemvalue="Python.searchAgents" />
+        <item index="1" class="java.lang.String" itemvalue="Python.game" />
+        <item index="2" class="java.lang.String" itemvalue="Python.multiAgents" />
+        <item index="3" class="java.lang.String" itemvalue="Python.pacman" />
+        <item index="4" class="java.lang.String" itemvalue="Python.autograder" />
       </list>
     </recent_temporary>
   </component>
@@ -580,18 +592,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/multiagent/game.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.9387755" vertical-offset="2353" max-vertical-offset="12444">
+          <caret line="147" column="24" selection-start-line="147" selection-start-column="24" selection-end-line="147" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/multiagent/multiAgents.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="797" max-vertical-offset="3094">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1105" max-vertical-offset="3417">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/multiagent/pacman.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61893207" vertical-offset="1462" max-vertical-offset="11730">
-          <caret line="101" column="31" selection-start-line="101" selection-start-column="31" selection-end-line="101" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.2985437" vertical-offset="11318" max-vertical-offset="11730">
+          <caret line="673" column="0" selection-start-line="673" selection-start-column="0" selection-end-line="673" selection-end-column="0" />
           <folding>
             <element signature="e#1979#2009#0" expanded="true" />
           </folding>
