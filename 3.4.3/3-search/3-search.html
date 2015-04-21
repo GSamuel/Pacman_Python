@@ -1,0 +1,455 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Week 2 : Single agent search in PacMan</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.0.2.2 (Linux)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Jason Farquhar">
+	<META NAME="CHANGED" CONTENT="20130516;14173600">
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		TD P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		PRE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "Courier New", "Courier", "mono"; font-style: normal; font-weight: normal; line-height: 100% }
+		BLOCKQUOTE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		DT { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		DD { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+<H2 CLASS="western">Week 2: Single agent search in PacMan</H2>
+<BLOCKQUOTE STYLE="text-align: center"><IMG SRC="maze.png" NAME="graphics1" ALIGN=BOTTOM WIDTH=400 HEIGHT=400 BORDER=0>
+</BLOCKQUOTE>
+<BLOCKQUOTE STYLE="text-align: center"><CITE>All those colored
+walls,<BR>Mazes give PacMan the blues,<BR>So teach him to search.</CITE></BLOCKQUOTE>
+
+<H3 CLASS="western">Introduction</H3>
+<P>PacMan is hungry but tired. He knows there is food around (he can
+smell it), but how can he get to the food as efficiently as possible?
+<BR>In this project, we have a simple PacMan environment in which
+there are no ghosts and only a single food pellet. Your PacMan agent
+will find paths through his maze world to reach a particular location
+(where the food is). You will build general search algorithms and
+apply them to PacMan scenarios.</P>
+<P STYLE="margin-bottom: 0in">The code for this project consists of
+several Python files, some of which you will need to read and
+understand in order to complete the assignment, and some of which you
+can ignore. You can download all the code and supporting files
+(including this description) as a <A HREF="3-search.zip">3-search.zip</A>.
+</P>
+<TABLE CELLPADDING=10 CELLSPACING=2>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Files you'll edit:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="search.py">search.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Where all of your search algorithms will reside.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Where all of your search-based agents will reside.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Files you might want to look at:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="pacman.py">pacman.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>The main file that runs PacMan games. This file describes a
+			PacMan GameState type, which you use in this project.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="game.py">game.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>The logic behind how the PacMan world works. This file
+			describes several supporting types like AgentState, Agent,
+			Direction, and Grid.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="util.py">util.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Useful data structures for implementing search algorithms.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Supporting files you can ignore:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="graphicsDisplay.py">graphicsDisplay.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Graphics for PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="graphicsUtils.py">graphicsUtils.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Support for PacMan graphics</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="textDisplay.py">textDisplay.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>ASCII graphics for PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="ghostAgents.py">ghostAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Agents to control ghosts</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="keyboardAgents.py">keyboardAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Keyboard interfaces to control PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="layout.py">layout.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Code for reading layout files and storing their contents</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><STRONG>What to submit:</STRONG> You will fill in portions of
+<CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>
+and <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+during the assignment. You should submit these two files (only). 
+</P>
+
+<H3 CLASS="western">Welcome to PacMan 
+</H3>
+<P>After downloading the code (<A HREF="2-search.zip">2-search.zip</A>),
+unzipping it and changing to the <EM>search</EM> directory, you
+should be able to play a game of PacMan by typing the following at
+the command line: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py</PRE>
+<P><B>Note:</B> see the information in the python tutorial for how to to use the command-line to execute these files.
+Alternatively, you can execute them directly from PyCharm by using the menu option <BR>
+<SPAN><CODE>Run-&gt;Run...</CODE></SPAN>
+</P>
+<P>
+PacMan lives in a shiny blue world of twisting corridors and tasty
+round treats. Navigating this world efficiently will be PacMan's
+first step in mastering his domain. 
+</P>
+<P>The simplest agent in <A HREF="searchAgents.py">searchAgents.py</A>
+is called the <CODE CLASS="western">GoWestAgent</CODE>, which always
+goes West (a trivial reflex agent). This agent can only be successful
+in very simple and special worlds: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py --layout testMaze --pacman GoWestAgent</PRE>
+<P>(<B>Note</B>: again this is the command-line way to run this function
+with command-line options.  When running from PyCharm you will enter the
+options, i.e. the bits after the .py which are: <BR>
+“<SPAN><CODE CLASS="western">--layout testMaze --pacman GoWestAgent</CODE></SPAN>” <BR>
+in PyCharm's interpreter window as explained in the python tutorial.</P>
+<P>But, things already get ugly for this agent when turning is required:
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py --layout tinyMaze --pacman GoWestAgent</PRE>
+<P>If pacman gets stuck, you can exit the game by typing CTRL-c into
+your terminal. Soon, your agent will solve not only <CODE CLASS="western">tinyMaze</CODE>,
+but any maze you want. Note that <CODE CLASS="western"><A HREF="pacman.py">pacman.py</A></CODE>
+supports a number of parameters (options) that can each be expressed
+in a long way (e.g., <CODE CLASS="western">--layout</CODE>) or a
+short way (e.g., <CODE CLASS="western">-l</CODE>). You can see the
+list of all options and their default values via: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -h</PRE>
+<P>Also, all of the commands that appear in this project also appear in
+<A HREF="commands.txt">commands.txt</A>, for easy copying and
+pasting. 
+</P>
+<H3 CLASS="western">Finding a Fixed Food Dot using Search Algorithms 
+</H3>
+<P>In <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>,
+you'll find a fully implemented <CODE CLASS="western">SearchAgent</CODE>,
+which plans out a path through PacMan's world and then executes that
+path step-by-step. The search algorithms for planning a path are not
+implemented -- that's your job. As you work through the following
+questions, you might need to refer to this <A HREF="#Glossary">glossary
+of objects in the code</A>. First, test that the <CODE CLASS="western">SearchAgent</CODE>
+is working correctly by running: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l tinyMaze -p SearchAgent -a fn=tinyMazeSearch</PRE><P>
+The command above tells the <CODE CLASS="western">SearchAgent</CODE>
+to use <CODE CLASS="western">tinyMazeSearch</CODE> as its search
+algorithm, which is implemented in <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>.
+PacMan should navigate the maze successfully. 
+</P>
+<P>Now it's time to write full-fledged generic search functions to
+help PacMan plan routes! Pseudocode for the search algorithms you'll
+write can be found in the lecture slides and Poole&amp;Mackworth.
+Remember that a search node must contain not only a state but also
+the information necessary to reconstruct the path (plan) which gets
+to that state. 
+</P>
+<P><EM>Important note:</EM> All of your search functions need to
+return a list of <EM>actions</EM> that will lead the agent from the
+start to the goal. These actions all have to be legal moves (valid
+directions, no moving through walls). 
+</P>
+<P><EM>Hint:</EM> Each algorithm is very similar. Algorithms for DFS,
+BFS, UCS and A* differ only in the details of how the fringe is
+managed. So, concentrate on getting DFS right and the rest should be
+relatively straightforward. Indeed, one possible implementation
+requires only a single generic search method which is configured with
+an algorithm-specific queuing strategy (but your implementation need
+<EM>not</EM> be of this form to receive full credit). 
+</P>
+<P><EM>Hint:</EM> Make sure to check out the <CODE CLASS="western">Stack,
+Queue</CODE> and <CODE CLASS="western">PriorityQueue</CODE> types
+provided to you in <CODE CLASS="western"><A HREF="util.py">util.py</A></CODE>!
+</P>
+<P><EM><STRONG>Assignment 1 </STRONG></EM>Implement the depth-first
+search (DFS) algorithm in the <CODE CLASS="western">depthFirstSearch</CODE>
+function in <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>.
+To make your algorithm <EM>complete</EM>, write the graph search
+version of DFS, which avoids expanding any already visited states
+(P&amp;M section 3.7.1). 
+</P>
+<P>Your code should quickly find a solution for: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l tinyMaze -p SearchAgent
+python pacman.py -l mediumMaze -p SearchAgent
+python pacman.py -l bigMaze -z .5 -p SearchAgent</PRE><P>
+The PacMan board will show an overlay of the states explored, and the
+order in which they were explored (brighter red means earlier
+exploration). Is the exploration order what you would have expected?
+Does PacMan actually go to all the explored squares on his way to the
+goal? 
+</P>
+<P><EM>Hint:</EM> If you use a <CODE CLASS="western">Stack</CODE> as
+your data structure, the solution found by your DFS algorithm for
+<CODE CLASS="western">mediumMaze</CODE> should have a length of 130
+(provided you push successors onto the fringe in the order provided
+by getSuccessors; you might get 244 if you push them in the reverse
+order). Is this a least cost solution? If not, think about what
+depth-first search is doing wrong. 
+</P>
+<P><EM><STRONG>Assignment 2 </STRONG></EM>Implement the breadth-first
+search (BFS) algorithm in the <CODE CLASS="western">breadthFirstSearch</CODE>
+function in <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>.
+Again, write a graph search algorithm that avoids expanding any
+already visited states. Test your code the same way you did for
+depth-first search. 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l mediumMaze -p SearchAgent -a fn=bfs
+python pacman.py -l bigMaze -p SearchAgent -a fn=bfs -z .5</PRE><P>
+Does BFS find a least cost solution? If not, check your
+implementation. 
+</P>
+<P><EM>Hint:</EM> If PacMan moves too slowly for you, try the option
+<CODE CLASS="western">--frameTime 0</CODE>. 
+</P>
+<P><EM>Note:</EM> If you've written your search code generically,
+your code should work equally well for the eight-puzzle search
+problem without any changes. 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python eightpuzzle.py</PRE>
+
+<h3 class="western">Run configuration arguments</h3>
+
+<p>
+Tired of entering the command line arguments (like 'bigMaze -p SearchAgent -a fn=bfs -z .5') over and over again?
+There is an easier, faster way to do this. We can tell PyCharm to always run our program with these arguments.
+</p>
+
+<p>
+To do this, go to the menu at the top; 'Run -> Edit Configurations...'. The settings for the current default
+configuration (which is run when you click the green arrow) are shown. In the 'Script parameters' field, enter the arguments
+you like (without 'python pacman.py').
+</p>
+
+<p>
+Now, each time you hit the green arrow button, or the debug button, the arguments will automatically be entered.
+Don't forget to change the arguments when you get to another part of the assignment!
+</p>
+
+<H3 CLASS="western">
+Varying the Cost Function 
+</H3>
+<P>While BFS will find a fewest-actions path to the goal, we might
+want to find paths that are &quot;best&quot; in other senses.
+Consider <CODE CLASS="western"><A HREF="layouts/mediumDottedMaze.lay">mediumDottedMaze</A></CODE>
+and <CODE CLASS="western"><A HREF="layouts/mediumScaryMaze.lay">mediumScaryMaze</A></CODE>.
+By changing the cost function, we can encourage PacMan to find
+different paths. For example, we can charge more for dangerous steps
+in ghost-ridden areas or less for steps in food-rich areas, and a
+rational PacMan agent should adjust its behavior in response. 
+</P>
+<P><EM><STRONG>Assignment 3 </STRONG></EM>Implement the uniform-cost
+graph search algorithm in the <CODE CLASS="western">uniformCostSearch</CODE>
+function in <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>.
+We encourage you to look through <CODE CLASS="western"><A HREF="util.py">util.py</A></CODE>
+for some data structures that may be useful in your implementation.
+You should now observe successful behavior in all three of the
+following layouts, where the agents below are all UCS agents that
+differ only in the cost function they use (the agents and cost
+functions are written for you): 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l mediumMaze -p SearchAgent -a fn=ucs
+python pacman.py -l mediumDottedMaze -p StayEastSearchAgent
+python pacman.py -l mediumScaryMaze -p StayWestSearchAgent</PRE><P>
+<EM>Note:</EM> You should get very low and very high path costs for
+the <CODE CLASS="western">StayEastSearchAgent</CODE> and
+<CODE CLASS="western">StayWestSearchAgent</CODE> respectively, due to
+their exponential cost functions (see <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+for details). 
+</P>
+<H3 CLASS="western">A* search 
+</H3>
+<P><EM><STRONG>Assignment 4 </STRONG></EM>Implement A* graph search
+in the empty function <CODE CLASS="western">aStarSearch</CODE> in
+<CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>.
+A* takes a heuristic function as an argument. Heuristics take two
+arguments: a state in the search problem (the main argument), and the
+problem itself (for reference information). The <CODE CLASS="western">nullHeuristic</CODE>
+heuristic function in <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>
+is a trivial example. 
+</P>
+<P>You can test your A* implementation on the original problem of
+finding a path through a maze to a fixed position using the Manhattan
+distance heuristic (implemented already as <CODE CLASS="western">manhattanHeuristic</CODE>
+in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>).
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l bigMaze -z .5 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic </PRE><P>
+You should see that A* finds the optimal solution slightly faster
+than uniform cost search (about 549 vs. 620 search nodes expanded in
+our implementation, but ties in priority may make your numbers differ
+slightly). What happens on <CODE CLASS="western">openMaze</CODE> for
+the various search strategies? 
+</P>
+<P>The real power of A* will only be apparent with more challenging
+search problems, in particular when more than one goal (i.e, food
+pellet) has to be reached. That will be the topic for next week's
+practical sessions. 
+</P>
+<H3 CLASS="western">BONUS: Changing the representation 
+</H3>
+<P>The PacMan world is full of corridors. Clearly it's stupid for
+PacMan to go partway down a corridor and then turn around (when there
+are no ghosts). However, the search methods used so far all check if
+turning around is a reasonable option after every step down the
+corridor (even if the cycle avoidance mechanism ensures that they do
+not actually do turn around). Potentially, a lot of effort can be
+saved by re-representing the problem in such a way that a single
+action is moving the whole way down a corridor rather than just
+moving one cell onwards. Replacing a sequence of actions by a single
+action in this way is a form of problem abstraction, which is
+commonly used to speed up search - in particular in computer games,
+where the graph of cross-roads and moves between them is called the
+<EM>waypoint graph</EM>. See e.g.
+<A HREF="http://www.aiwisdom.com/ai_pathfinding.html">www.aiwisdom.com/ai_pathfinding.html
+</A>
+</P>
+<P><EM><STRONG>Extra Credit Assignment </STRONG></EM>Implement the
+missing code in the <CODE CLASS="western">CrossroadSearchAgent</CODE>
+in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>,
+so that one action is a move between crossroads in the map (i.e.
+points where PacMan has more than 2 legal moves available). 
+</P>
+<H3 CLASS="western"><A NAME="Glossary"></A>Object Glossary 
+</H3>
+<P>Here's a glossary of the key objects in the code base related to
+search problems, for your reference: 
+</P>
+<DL>
+	<DT><CODE CLASS="western">SearchProblem (search.py)</CODE> 
+	</DT><DD>
+	A SearchProblem is an abstract object that represents the state
+	space, successor function, costs, and goal state of a problem. You
+	will interact with any SearchProblem only through the methods
+	defined at the top of <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>
+		</DD><DT>
+	<CODE CLASS="western">PositionSearchProblem (searchAgents.py)</CODE>
+		</DT><DD>
+	A specific type of SearchProblem that you will be working with ---
+	it corresponds to searching for a single pellet in a maze. 
+	</DD><DT>
+	<CODE CLASS="western">CrossroadSearchProblem (searchAgents.py)</CODE> 
+	</DT><DD> A specific type of SearchProblem that you will define for
+	the <em>extra credit</em> problem --- it corresponds to searching
+	only between cross-roads where pacman has to make a choice between
+	directions to proceed.
+	</DD><DT>
+	<CODE CLASS="western">CornersProblem (searchAgents.py)</CODE> 
+	</DT><DD>
+	A specific type of SearchProblem that you will define --- it
+	corresponds to searching for a path through all four corners of a
+	maze. (next week)
+	</DD><DT>
+	<CODE CLASS="western">FoodSearchProblem (searchAgents.py)</CODE> 
+	</DT><DD>
+	A specific type of SearchProblem that you will be working with ---
+	it corresponds to searching for a way to eat all the pellets in a
+	maze.  (next week)
+	</DD><DT>
+	Search Function 
+	</DT><DD>
+	A search function is a function which takes an instance of
+	SearchProblem as a parameter, runs some algorithm, and returns a
+	sequence of actions that lead to a goal. Example of search functions
+	are <CODE CLASS="western">depthFirstSearch</CODE> and
+	<CODE CLASS="western">breadthFirstSearch</CODE>, which you have to
+	write. You are provided <CODE CLASS="western">tinyMazeSearch</CODE>
+	which is a very bad search function that only works correctly on
+	<CODE CLASS="western">tinyMaze</CODE> 
+	</DD><DT>
+	<CODE CLASS="western">SearchAgent</CODE> 
+	</DT><DD STYLE="margin-bottom: 0.2in">
+	<CODE CLASS="western">SearchAgent</CODE> is is a class which
+	implements an Agent (an object that interacts with the world) and
+	does its planning through a search function. The <CODE CLASS="western">SearchAgent</CODE>
+	first uses the search function provided to make a plan of actions to
+	take to reach the goal state, and then executes the actions one at a
+	time. 
+	</DD></DL>
+</BODY>
+</HTML>
