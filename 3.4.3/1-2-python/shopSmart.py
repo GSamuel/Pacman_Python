@@ -1,4 +1,5 @@
 #Gideon Hoogeveen s4150538
+#Laura Snijder s4203569
 
 # shopSmart.py
 # ------------

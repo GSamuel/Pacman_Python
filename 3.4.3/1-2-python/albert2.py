@@ -1,4 +1,5 @@
 #Gideon Hoogeveen s4150538
+#Laura Snijder s4203569
 
 import math # a built-in library containing some mathematical operations like square root
 
