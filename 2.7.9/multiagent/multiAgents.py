@@ -14,6 +14,7 @@
 
 from util import manhattanDistance
 from game import Directions
+from game import Grid
 import random, util
 
 from game import Agent
@@ -73,14 +74,53 @@ class ReflexAgent(Agent):
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-        ghostDistanceScore = 0
+
+        # tileScore = 0
+        # ghostDistanceScore = 0
+        # for ghostState in newGhostStates:
+        #     dist = distancePointToPoint(newPos, ghostState.getPosition())
+        #     if dist < 3:
+        #         tileScore = -2 + dist
+        #     # if ghostState.scaredTimer >dist and dist < 6:
+        #     #     tileScore = 5-dist
+        #
+        # tileScore += -distanceToClosestPoint(newPos,newFood.asList())
+        #
+        # "*** YOUR CODE HERE ***"
+
+        walls = currentGameState.getWalls()
+        costGrid = Grid(walls.width, walls.height, False)
+
+        for x,y in walls.asList():
+            costGrid[x][y] = 'x'
+
+        frontier = []
+        vec = ((1,0),(0,1),(-1,0),(0,-1))
+        for x,y in newFood.asList():
+            costGrid[x][y] = 'p'
+            frontier.append((x,y,0))
+
+        while len(frontier) > 0:
+            x,y,c = frontier.pop()
+            for vx,vy in vec:
+                vx += x
+                vy += y
+                if vx >= 0 and vy >=0 and vx < costGrid.width and vy < costGrid.height:
+                    v = costGrid[vx][vy]
+                    if((v == False or v > c+1) and v != 'p' and v != 'x'):
+                        costGrid[vx][vy] = c+1
+                        frontier.append((vx,vy,c+1))
+
+        ghostScore = 0
         for ghostState in newGhostStates:
             dist = distancePointToPoint(newPos, ghostState.getPosition())
-            if dist < 2:
-                ghostDistanceScore = -10
+            if dist < 3:
+                ghostScore = -50
+            if ghostState.scaredTimer >dist and dist < 10:
+                ghostScore = 18-dist*2
 
-        "*** YOUR CODE HERE ***"
-        return successorGameState.getScore() - distanceToClosestPoint(newPos, newFood.asList()) + ghostDistanceScore
+
+        return successorGameState.getScore()*2 - costGrid[newPos[0]][newPos[1]] + ghostScore
 
 def distanceToClosestPoint(p1, list):
     if len(list) == 0:
