@@ -258,17 +258,42 @@ class CrossroadSearchAgent(SearchAgent):
         #   nextx, nexty = int(x + dx), int(y + dy)
         #   hitsWall = self.walls[nextx][nexty]
 
-
         successors = []
         self._expanded += 1 # DO NOT CHANGE
-        for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]: #Voor elke node waar je bent
-            x,y = state[0]                                                                       #volg het pad in elke richting, tot het volgende kruispunt
-            dx, dy = Actions.directionToVector(direction)                                        #Of tot het doodloopt, zonder terug te gaan naar waar je
-            nextx, nexty = int(x + dx), int(y + dy)                                              #vandaan komt
-            if not self.walls[nextx][nexty]:
-                nextFood = state[1].copy()
-                nextFood[nextx][nexty] = False
-                successors.append( ( ((nextx, nexty), nextFood), direction, 1) )
+
+
+        for firstDir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            x,y = state[0]
+
+            dx, dy = Actions.directionToVector(firstDir)
+            nextx, nexty = int(x + dx), int(y + dy)
+
+            pathDone = False
+            if self.walls[nexty][nexty]:
+                pathDone = True
+
+            print(pathDone)
+
+            succ = ((nextx,nexty), [firstDir], 1)
+            prevDir = firstDir
+
+            while not pathDone:
+                for dir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                    x,y = succ[0]
+                    if dir != Directions.REVERSE(prevDir):
+                        dx, dy = Actions.directionToVector(dir)
+                        nextx, nexty = int(x + dx), int(y + dy)
+                        if not self.walls[nextx][nexty]:
+                            succ[0] = (nextx,nexty)
+                            print(succ[1])
+                            succ[1] += dir
+                            print(succ[1])
+                            succ[2] += 1
+                            prevDir = dir
+                            if self.__tileIsCrossRoad__(nextx,nexty) or self.__tileIsDeadEnd__(nextx,nexty):
+                                successors.append(succ)
+                                pathDone = True
+
         return successors
 
     def __tileIsCrossRoad__(self, x,y):
@@ -280,7 +305,7 @@ class CrossroadSearchAgent(SearchAgent):
     def __countAdjecentWalls__(self,x,y):
         count = 0
         for direction in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            dx, dy = Actions.directionToVector(direction)                                        #Of tot het doodloopt, zonder terug te gaan naar waar je
+            dx, dy = Actions.directionToVector(direction)
             nextx, nexty = int(x + dx), int(y + dy)
             if self.walls[nextx][nexty]:
                 count += 1
