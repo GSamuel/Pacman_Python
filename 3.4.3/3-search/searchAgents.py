@@ -238,63 +238,63 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
 
-
-class CrossroadSearchAgent(SearchAgent):
-    def getSuccessors(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-         As noted in search.py:
-             For a given state, this should return a list of triples,
-         (successor, action, stepCost), where 'successor' is a
-         successor to the current state, 'action' is the action
-         required to get there, and 'stepCost' is the incremental
-         cost of expanding to that successor
-        """
-        # Add a successor state to the successor list if the action is legal
-        # Here's a code snippet for figuring out whether a new position hits a wall:
-        # x,y = currentPosition
-        #   dx, dy = Actions.directionToVector(action)
-        #   nextx, nexty = int(x + dx), int(y + dy)
-        #   hitsWall = self.walls[nextx][nexty]
-
-        successors = []
-        self._expanded += 1 # DO NOT CHANGE
-
-
-        for firstDir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state[0]
-
-            dx, dy = Actions.directionToVector(firstDir)
-            nextx, nexty = int(x + dx), int(y + dy)
-
-            pathDone = False
-            if self.walls[nexty][nexty]:
-                pathDone = True
-
-            print(pathDone)
-
-            succ = ((nextx,nexty), [firstDir], 1)
-            prevDir = firstDir
-
-            while not pathDone:
-                for dir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-                    x,y = succ[0]
-                    if dir != Directions.REVERSE(prevDir):
-                        dx, dy = Actions.directionToVector(dir)
-                        nextx, nexty = int(x + dx), int(y + dy)
-                        if not self.walls[nextx][nexty]:
-                            succ[0] = (nextx,nexty)
-                            print(succ[1])
-                            succ[1] += dir
-                            print(succ[1])
-                            succ[2] += 1
-                            prevDir = dir
-                            if self.__tileIsCrossRoad__(nextx,nexty) or self.__tileIsDeadEnd__(nextx,nexty):
-                                successors.append(succ)
-                                pathDone = True
-
-        return successors
+#
+# class CrossroadSearchAgent(SearchAgent):
+#     def getSuccessors(self, state):
+#         """
+#         Returns successor states, the actions they require, and a cost of 1.
+#
+#          As noted in search.py:
+#              For a given state, this should return a list of triples,
+#          (successor, action, stepCost), where 'successor' is a
+#          successor to the current state, 'action' is the action
+#          required to get there, and 'stepCost' is the incremental
+#          cost of expanding to that successor
+#         """
+#         # Add a successor state to the successor list if the action is legal
+#         # Here's a code snippet for figuring out whether a new position hits a wall:
+#         # x,y = currentPosition
+#         #   dx, dy = Actions.directionToVector(action)
+#         #   nextx, nexty = int(x + dx), int(y + dy)
+#         #   hitsWall = self.walls[nextx][nexty]
+#
+#         successors = []
+#         self._expanded += 1 # DO NOT CHANGE
+#
+#
+#         for firstDir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+#             x,y = state[0]
+#
+#             dx, dy = Actions.directionToVector(firstDir)
+#             nextx, nexty = int(x + dx), int(y + dy)
+#
+#             pathDone = False
+#             if self.walls[nexty][nexty]:
+#                 pathDone = True
+#
+#             print(pathDone)
+#
+#             succ = ((nextx,nexty), [firstDir], 1)
+#             prevDir = firstDir
+#
+#             while not pathDone:
+#                 for dir in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+#                     x,y = succ[0]
+#                     if dir != Directions.REVERSE(prevDir):
+#                         dx, dy = Actions.directionToVector(dir)
+#                         nextx, nexty = int(x + dx), int(y + dy)
+#                         if not self.walls[nextx][nexty]:
+#                             succ[0] = (nextx,nexty)
+#                             print(succ[1])
+#                             succ[1] += dir
+#                             print(succ[1])
+#                             succ[2] += 1
+#                             prevDir = dir
+#                             if self.__tileIsCrossRoad__(nextx,nexty) or self.__tileIsDeadEnd__(nextx,nexty):
+#                                 successors.append(succ)
+#                                 pathDone = True
+#
+#         return successors
 
     def __tileIsCrossRoad__(self, x,y):
         return self.__countAdjecentWalls__(x,y) >= 2

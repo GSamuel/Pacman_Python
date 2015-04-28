@@ -84,84 +84,92 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-
     frontier = []
-    visited = []
-
+    visited = set()
     start = problem.getStartState()
-    visited.append(start)
+    visited.add(start)
+    succ =  problem.getSuccessors(start)
+    for suc in succ:
+        frontier.append((suc,[suc[1]]))
 
-    succs = problem.getSuccessors(start)
-    for succ in succs:
-        frontier.append((succ, []))
+    done = False
+    foundPath = []
+    while not done:
+        (node,path) = frontier.pop(len(frontier)-1)
+        if node[0] not in visited:
+            visited.add(node[0])
+            if problem.isGoalState(node[0]):
+                done = True
+                foundPath = path
+            else:
+                succ = problem.getSuccessors(node[0])
+                for suc in succ:
+                    frontier.append((suc,path+[suc[1]]))
 
-    while frontier:
-        ((state, path, cost),totalPath) = frontier.pop(len(frontier)-1)
-        if problem.isGoalState(state):
-            return totalPath + [path]
-        if state not in visited:
-            succs = problem.getSuccessors(state)
-            for succ in succs:
-                frontier.append((succ, totalPath+[path]))
-
-        visited.append(state)
-
-    return []
-
+    return foundPath
 
 
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 81]"
 
     frontier = []
-    visited = []
-
+    visited = set()
     start = problem.getStartState()
-    visited.append(start)
+    visited.add(start)
 
-    succs = problem.getSuccessors(start)
-    for succ in succs:
-        frontier.append((succ, []))
+    succ =  problem.getSuccessors(start)
+    for suc in succ:
+        frontier.append((suc,[suc[1]]))
 
-    while frontier:
-        ((state, path, cost),totalPath) = frontier.pop(0)
-        if problem.isGoalState(state):
-            return totalPath + [path]
-        if state not in visited:
-            succs = problem.getSuccessors(state)
-            for succ in succs:
-                frontier.append((succ, totalPath+[path]))
 
-        visited.append(state)
 
-    return []
+    done = False
+    foundPath = []
+    while not done:
+        (node,path) = frontier.pop(0)
+        if node[0] not in visited:
+            visited.add(node[0])
+            if problem.isGoalState(node[0]):
+                done = True
+                foundPath = path
+            else:
+                succ = problem.getSuccessors(node[0])
+                for suc in succ:
+                    frontier.append((suc,path+[suc[1]]))
+
+    return foundPath
 
 
 def uniformCostSearch(problem):
     """"Search the node of least total cost first."""
     frontier = []
-    visited = []
-
+    visited = set()
     start = problem.getStartState()
-    visited.append(start)
+    visited.add(start)
 
-    succs = problem.getSuccessors(start)
-    for succ in succs:
-        frontier.append((succ, [],succ[2]))
+    succ =  problem.getSuccessors(start)
+    for suc in succ:
+        frontier.append((suc,[suc[1]], suc[2]))
 
-    while frontier:
-        frontier = sorted(frontier, key=lambda node: node[2])
-        ((state, path, cost),totalPath,totalCost) = frontier.pop(0)
-        if problem.isGoalState(state):
-            return totalPath + [path]
-        if state not in visited:
-            succs = problem.getSuccessors(state)
-            for succ in succs:
-                frontier.append((succ, totalPath+[path], totalCost+cost))
+    frontier = sorted(frontier, key=lambda node: node[2])
 
-        visited.append(state)
 
-    return []
+    done = False
+    foundPath = []
+    while not done:
+        (node,path,cost) = frontier.pop(0)
+        if node[0] not in visited:
+            visited.add(node[0])
+            if problem.isGoalState(node[0]):
+                done = True
+                foundPath = path
+            else:
+                succ = problem.getSuccessors(node[0])
+                for suc in succ:
+                    frontier.append((suc,path+[suc[1]], cost+suc[2]))
+                frontier = sorted(frontier, key=lambda node: node[2])
+
+    return foundPath
 
 
 def nullHeuristic(state, problem=None):
@@ -175,30 +183,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
 
-    """"Search the node of least total cost first."""
     frontier = []
-    visited = []
-
+    visited = set()
     start = problem.getStartState()
-    visited.append(start)
+    visited.add(start)
 
-    succs = problem.getSuccessors(start)
-    for succ in succs:
-        frontier.append((succ, [],succ[2]))
+    succ =  problem.getSuccessors(start)
+    for suc in succ:
+        frontier.append((suc,[suc[1]], suc[2]))
 
-    while frontier:
-        frontier = sorted(frontier, key=lambda node: node[2] + heuristic(node[0][0],problem))
-        ((state, path, cost),totalPath,totalCost) = frontier.pop(0)
-        if problem.isGoalState(state):
-            return totalPath + [path]
-        if state not in visited:
-            succs = problem.getSuccessors(state)
-            for succ in succs:
-                frontier.append((succ, totalPath+[path], totalCost+cost))
+    frontier = sorted(frontier, key=lambda node: (node[2] + heuristic(node[0][0],problem)))
 
-        visited.append(state)
 
-    return []
+    done = False
+    foundPath = []
+    while not done:
+        (node,path,cost) = frontier.pop(0)
+        if node[0] not in visited:
+            visited.add(node[0])
+            if problem.isGoalState(node[0]):
+                done = True
+                foundPath = path
+            else:
+                succ = problem.getSuccessors(node[0])
+                for suc in succ:
+                    frontier.append((suc,path+[suc[1]], cost+suc[2]))
+                frontier = sorted(frontier, key=lambda node: (node[2] + heuristic(node[0][0],problem)))
+
+    return foundPath
 
     "Bonus assignment: Adjust the getSuccessors() method in CrossroadSearchAgent class"
     "in searchAgents.py and test with:"
