@@ -48,6 +48,19 @@ from existingSearchAgents import SearchAgent
 
 #################################################'''
 
+class CrossroadsSearchProblem (search.SearchProblem):
+
+  def getSuccessors(self, state):
+    """
+    Returns successor states, the meta-actions they require, and the cost of these actions.
+
+    In this version of getSuccessors each action is a 'meta-action' (a list of actions) which moves pacman the whole
+    way along any corridor until the next cross-roads (point where more the 3 action directions are possible)
+
+    """
+
+    "*** YOUR CODE HERE ***"
+    util.raiseNotDefined()
 
 class CornersProblem(search.SearchProblem):
     """
@@ -237,6 +250,14 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
+
+class CrossroadSearchAgent(SearchAgent):
+
+  def registerInitialState(self, state):
+    """
+    Override the registerInitialState() of SearchAgent so that the list of lists of actions returned from
+    self.searchFunction() is flattened into a list of single actions
+    """
 
 #
 # class CrossroadSearchAgent(SearchAgent):
