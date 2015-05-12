@@ -1,0 +1,434 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Project 2: Multi-goal search in PacMan</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.0.2.2 (Linux)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Jason Farquhar">
+	<META NAME="CHANGED" CONTENT="20130528;331600">
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		TD P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		PRE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "Courier New", "Courier", "mono"; font-style: normal; font-weight: normal; line-height: 100% }
+		BLOCKQUOTE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		TH P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; line-height: 120% }
+		DT { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		DD { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+<H2 CLASS="western">Project 2: Multi-goal search in PacMan</H2>
+<BLOCKQUOTE STYLE="text-align: center"><!--announcements--><IMG SRC="multisearch.jpg" NAME="graphics1" ALIGN=BOTTOM WIDTH=400 HEIGHT=200 BORDER=0>
+</BLOCKQUOTE>
+<BLOCKQUOTE STYLE="text-align: center"><CITE>So much to eat,<BR>Every
+pellet is a goal.<BR>How can PacMan find them all?</CITE></BLOCKQUOTE>
+<H3 CLASS="western">Introduction</H3>
+<P>PacMan is <EM>still</EM> hungry and tired, but this time there
+seem to be lots of food! And not a ghost in sight! <BR>In this
+project, your PacMan agent will find paths through its maze world to
+collect food efficiently. Your task is to modify the search methods
+from the previous week to work when PacMan wants to visit lots of
+equally rewarding goals as efficiently as possible (i.e. in the
+minimum number of moves). 
+</P>
+<P STYLE="margin-bottom: 0in">Once again, the code for this project
+consists of several Python files, some of which you are going to
+edit, some of which you need to read and understand, and some of
+which you can ignore. All necessary files are contained in this
+folder. <STRONG>Although many of them are the same as last week, it's
+important that you don't re-use last week's files</STRONG>. Instead,
+make a fresh project by downloading all the code and supporting files
+(including this description) from this <A HREF="3-multisearch.zip">3-multisearch.zip</A>.
+</P>
+<TABLE CELLPADDING=10 CELLSPACING=2>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Files you'll edit:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="search.py">search.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Where all of your search algorithms will reside.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Where all of your search-based agents, and search problem
+			definitions will reside.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Files you might want to look at:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="pacman.py">pacman.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>The main file that runs PacMan games. This file describes a
+			PacMan GameState type, which you use in this project.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="game.py">game.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>The logic behind how the PacMan world works. This file
+			describes several supporting types like AgentState, Agent,
+			Direction, and Grid.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="util.py">util.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Useful data structures for implementing search algorithms.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 STYLE="border: none; padding: 0in">
+			<P><B>Supporting files you can ignore:</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="graphicsDisplay.py">graphicsDisplay.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Graphics for PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="graphicsUtils.py">graphicsUtils.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Support for PacMan graphics</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="textDisplay.py">textDisplay.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>ASCII graphics for PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="ghostAgents.py">ghostAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Agents to control ghosts</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="keyboardAgents.py">keyboardAgents.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Keyboard interfaces to control PacMan</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD STYLE="border: none; padding: 0in">
+			<P><CODE CLASS="western"><A HREF="layout.py">layout.py</A></CODE></P>
+		</TD>
+		<TD STYLE="border: none; padding: 0in">
+			<P>Code for reading layout files and storing their contents</P>
+		</TD>
+	</TR>
+</TABLE>
+<P><STRONG>What to submit:</STRONG> You will fill in additional
+portions of <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>
+and <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+during the assignment. Just like last week, you should submit these
+two files (only). 
+</P>
+<H3 CLASS="western">Finding All the Corners 
+</H3>
+<P>The real power of A* will only be apparent with a more challenging
+search problem than last week's. This week, it's time to formulate a
+new problem and design a heuristic for it. 
+</P>
+<P>In <EM>corner mazes</EM>, there are four dots, one in each corner.
+Our new search problem is to find the shortest path through the maze
+that touches all four corners (whether the maze actually has food
+there or not). Note that for some mazes like <A HREF="layouts/tinyCorners.lay">tinyCorners</A>,
+the shortest path does not always go to the closest food first! <EM>Hint</EM>:
+the shortest path through <CODE CLASS="western">tinyCorners</CODE>
+takes 28 steps. 
+</P>
+<P><EM><STRONG>Assignment 1: </STRONG></EM>Implement the
+<CODE CLASS="western">CornersProblem</CODE> search problem in
+<CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>.
+You will need to choose a state representation that encodes all the
+information necessary to detect whether all four corners have been
+reached. Now, your search agent should solve: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l tinyCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+python pacman.py -l mediumCorners -p SearchAgent -a fn=bfs,prob=CornersProblem</PRE><P>
+To receive full credit, you need to define an abstract state
+representation that <EM>does not</EM> encode irrelevant information
+(like the position of ghosts, where extra food is, etc.). In
+particular, do not use a PacMan <CODE CLASS="western">GameState</CODE>
+as a search state. Your code will be very, very slow if you do (and
+also wrong). 
+</P>
+<P><EM>A Hint:</EM> The only parts of the game state you need to
+reference in your implementation are the starting PacMan position and
+the location of the four corners. 
+</P>
+<P><EM>A Second Hint:</EM> In the <CODE CLASS="western">_init_</CODE> function of the
+<CODE CLASS="western">CornersProblem</CODE> class, the corners of the maze are stored as a tuple (of tuples),
+because the frontier in the search algorithm uses tuples. However, a tuple is an <B>immutable</B> data type,
+meaning that its contents can only be initialized, but not adjusted afterwards. So, whenever you wish to change
+something in a tuple, you should convert it to a list before making adjustments.
+Do not forget to change it back again into a tuple before passing it on!
+</P>
+<P>Our implementation of <CODE CLASS="western">breadthFirstSearch</CODE>
+expands just under 2000 search nodes on <A HREF="layouts/mediumCorners.lay">mediumCorners</A>.
+However, heuristics (used with A* search) can reduce the amount of
+searching required. 
+</P>
+<P><EM><STRONG>Assignment 2: </STRONG></EM>Implement a heuristic for
+the <CODE CLASS="western">CornersProblem</CODE> in <CODE CLASS="western">cornersHeuristic</CODE>.
+Grading: inadmissible heuristics will get <EM>no</EM> credit. 1 point
+for any admissible heuristic. 1 point for expanding fewer than 1600
+nodes. 1 point for expanding fewer than 1200 nodes. Expand fewer than
+800, and you're doing great! 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l mediumCorners -p AStarCornersAgent -z 0.5</PRE><P>
+<EM>Hint:</EM> Remember, heuristic functions just return numbers,
+which, to be admissible, must be lower bounds on the actual shortest
+path cost to the nearest goal. 
+</P>
+<P><EM>Note:</EM> <CODE CLASS="western">AStarCornersAgent</CODE> is a
+shortcut for <CODE CLASS="western">-p SearchAgent -a
+fn=aStarSearch,prob=CornersProblem,heuristic=cornersHeuristic</CODE>.
+</P>
+<H3 CLASS="western">Eating All The Dots 
+</H3>
+<P>Now we'll solve a hard search problem: eating all the PacMan food
+in as few steps as possible. For this, we'll need a new search
+problem definition which formalizes the food-clearing problem:
+<CODE CLASS="western">FoodSearchProblem</CODE> in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+(implemented for you). A solution is defined to be a path that
+collects all of the food in the PacMan world. For the present
+project, solutions do not take into account any ghosts or power
+pellets; solutions only depend on the placement of walls, regular
+food and PacMan (of course, ghosts can ruin the execution of a
+solution! We'll get to that in the next project). If you have written
+your general search methods correctly, <CODE CLASS="western">A*</CODE>
+with a null heuristic (equivalent to uniform-cost search) should
+quickly find an optimal solution to <A HREF="layouts/testSearch.lay">testSearch</A>
+with no code change on your part (total cost of 7). 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l testSearch -p AStarFoodSearchAgent</PRE><P>
+<EM>Note:</EM> <CODE CLASS="western">AStarFoodSearchAgent</CODE> is a
+shortcut for <CODE CLASS="western">-p SearchAgent -a
+fn=astar,prob=FoodSearchProblem,heuristic=foodHeuristic</CODE>. 
+</P>
+<P>You should find that UCS starts to slow down even for the
+seemingly simple <CODE CLASS="western"><A HREF="layouts/tinySearch.lay">tinySearch</A></CODE>.
+As a reference, our implementation takes 2.5 seconds to find a path
+of length 27 after expanding 4902 search nodes. 
+</P>
+<P><EM><STRONG>Assignment 3: </STRONG></EM>Fill in <CODE CLASS="western">foodHeuristic</CODE>
+in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+with a consistent heuristic for the <CODE CLASS="western">FoodSearchProblem</CODE>.
+Try your agent on the <CODE CLASS="western">trickySearch</CODE>
+board: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l trickySearch -p AStarFoodSearchAgent</PRE><P STYLE="margin-bottom: 0in">
+Our UCS agent finds the optimal solution in about 13 seconds,
+exploring over 16,000 nodes. If your heuristic is admissible, you
+will receive the following score, depending on how many nodes your
+heuristic expands. 
+</P>
+<CENTER>
+	<TABLE CELLPADDING=5 CELLSPACING=1>
+		<TR>
+			<TH STYLE="border-top: 1px double #808080; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0.05in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0in">
+				<P>Fewer nodes than:</P>
+			</TH>
+			<TH STYLE="border: 1px double #808080; padding: 0.05in">
+				<P>Points</P>
+			</TH>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0in">
+				<P>15000</P>
+			</TD>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0.05in">
+				<P>1</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0in">
+				<P>12000</P>
+			</TD>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0.05in">
+				<P>2</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0in">
+				<P>9000</P>
+			</TD>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0.05in">
+				<P>3 (medium)</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: none; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0in">
+				<P>7000</P>
+			</TD>
+			<TD STYLE="border-top: none; border-bottom: 1px double #808080; border-left: 1px double #808080; border-right: 1px double #808080; padding-top: 0in; padding-bottom: 0.05in; padding-left: 0.05in; padding-right: 0.05in">
+				<P>4 (hard)</P>
+			</TD>
+		</TR>
+	</TABLE>
+</CENTER>
+<P>If your heuristic is inadmissible, you will receive <EM>no</EM>
+credit, so be careful! Think through admissibility carefully, as
+inadmissible heuristics may manage to produce fast searches and even
+optimal paths. Can you solve <CODE CLASS="western"><A HREF="layouts/mediumSearch.lay">mediumSearch</A></CODE>
+in a short time? If so, we're either very, very impressed, or your
+heuristic is inadmissible. 
+</P>
+<P><EM>Admissibility vs. Consistency?</EM>Technically, admissibility
+isn't enough to guarantee correctness in graph search -- you need the
+stronger condition of consistency. For a heuristic to be consistent,
+it must hold that if an action has cost <EM>c</EM>, then taking that
+action can only cause a drop in heuristic of at most <EM>c</EM>. If
+your heuristic is not only admissible, but also consistent, you will
+receive 1 additional point for this question. 
+</P>
+<P>Almost always, admissible heuristics are also consistent,
+especially if they are derived from problem relaxations. Therefore it
+is probably easiest to start out by brainstorming admissible
+heuristics. Once you have an admissible heuristic that works well,
+you can check whether it is indeed consistent, too. Inconsistency can
+sometimes be detected by verifying that your returned solutions are
+non-decreasing in f-value. Moreover, if UCS and A* ever return paths
+of different lengths, your heuristic is inconsistent. This stuff is
+tricky. If you need help, don't hesitate to ask the course staff! 
+</P>
+<H3 CLASS="western">Suboptimal Search 
+</H3>
+<P>Sometimes, even with A* and a good heuristic, finding the optimal
+path through all the dots is hard (i.e. will take long). In these
+cases, we'd still like to find a reasonably good path, quickly. In
+this section, you'll write an agent that always eats the closest dot.
+<CODE CLASS="western">ClosestDotSearchAgent</CODE> is implemented for
+you in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>,
+but it's missing a key function that finds a path to the closest dot.
+</P>
+<P><EM><STRONG>Assignment 4: </STRONG></EM>Implement the function
+<CODE CLASS="western">findPathToClosestDot</CODE> in <CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>.
+Our agent solves this maze (suboptimally!) in under a second with a
+path cost of 350: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l bigSearch -p ClosestDotSearchAgent -z .5 </PRE><P>
+<EM>Hint:</EM> The quickest way to complete <CODE CLASS="western">findPathToClosestDot</CODE>
+is to fill in the <CODE CLASS="western">AnyFoodSearchProblem</CODE>,
+which is missing its goal test. Then, solve that problem with an
+appropriate search function. The solution should be very short! 
+</P>
+<P>Your <CODE CLASS="western">ClosestDotSearchAgent</CODE> won't
+always find the shortest possible path through the maze. (If you
+don't understand why, ask an assistant!) In fact, you can do better
+if you try. 
+</P>
+<H3 CLASS="western">BONUS: Near-optimal Search 
+</H3>
+<P><EM><STRONG>Extra Credit Assignment:</STRONG></EM> Implement an
+<CODE CLASS="western">ApproximateSearchAgent</CODE> in
+<CODE CLASS="western"><A HREF="searchAgents.py">searchAgents.py</A></CODE>
+that finds a short path through the <CODE CLASS="western">bigSearch</CODE>
+layout. Of course, hard-coding the path is <EM>not</EM> an admissible
+solution. If your algorithm finds the shortest path using no more
+than 30 seconds of computation, you will get the extra credit points.
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -l bigSearch -p ApproximateSearchAgent -z .5 -q </PRE><P>
+We will time your agent using the no graphics option <CODE CLASS="western">-q</CODE>,
+and it must complete in under 30 seconds on our grading machines.
+Please describe what your agent is doing in a comment! We reserve the
+right to also give extra credit to creative solutions, even if they
+don't work that well. 
+</P>
+<H3 CLASS="western"><A NAME="Glossary"></A>Object Glossary 
+</H3>
+<P>Here's a glossary of the key objects in the code base related to
+search problems, for your reference: 
+</P>
+<DL>
+	<DT><CODE CLASS="western">SearchProblem (search.py)</CODE> 
+	</DT><DD>
+	A SearchProblem is an abstract object that represents the state
+	space, successor function, costs, and goal state of a problem. You
+	will interact with any SearchProblem only through the methods
+	defined at the top of <CODE CLASS="western"><A HREF="search.py">search.py</A></CODE>
+		</DD><DT>
+	<CODE CLASS="western">PositionSearchProblem (searchAgents.py)</CODE>
+		</DT><DD>
+	A specific type of SearchProblem that you will be working with ---
+	it corresponds to searching for a single pellet in a maze. 
+	</DD><DT>
+	<CODE CLASS="western">CornersProblem (searchAgents.py)</CODE> 
+	</DT><DD>
+	A specific type of SearchProblem that you will define --- it
+	corresponds to searching for a path through all four corners of a
+	maze. 
+	</DD><DT>
+	<CODE CLASS="western">FoodSearchProblem (searchAgents.py)</CODE> 
+	</DT><DD>
+	A specific type of SearchProblem that you will be working with ---
+	it corresponds to searching for a way to eat all the pellets in a
+	maze. 
+	</DD><DT>
+	Search Function 
+	</DT><DD>
+	A search function is a function which takes an instance of
+	SearchProblem as a parameter, runs some algorithm, and returns a
+	sequence of actions that lead to a goal. Example of search functions
+	are <CODE CLASS="western">depthFirstSearch</CODE> and
+	<CODE CLASS="western">breadthFirstSearch</CODE>, which you have to
+	write. You are provided <CODE CLASS="western">tinyMazeSearch</CODE>
+	which is a very bad search function that only works correctly on
+	<CODE CLASS="western">tinyMaze</CODE> 
+	</DD><DT>
+	<CODE CLASS="western">SearchAgent</CODE> 
+	</DT><DD STYLE="margin-bottom: 0.2in">
+	<CODE CLASS="western">SearchAgent</CODE> is is a class which
+	implements an Agent (an object that interacts with the world) and
+	does its planning through a search function. The <CODE CLASS="western">SearchAgent</CODE>
+	first uses the search function provided to make a plan of actions to
+	take to reach the goal state, and then executes the actions one at a
+	time. 
+	</DD></DL>
+</BODY>
+</HTML>
