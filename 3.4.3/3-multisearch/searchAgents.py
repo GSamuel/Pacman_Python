@@ -380,7 +380,7 @@ def cornersHeuristic(state, problem):
     for permutation in permutations(cornersLeft):
         x,y = pos
         value2 =0
-        for dx,dy in cornersLeft:
+        for dx,dy in permutation:
             value2 += math.fabs(x-dx)
             value2 += math.fabs(y-dy)
             x = dx
@@ -471,6 +471,8 @@ class AStarFoodSearchAgent(SearchAgent):
 
 
 def foodHeuristic(state, problem):
+    import math
+    import time
     """
     Your heuristic for the FoodSearchProblem goes here.
 
@@ -495,9 +497,64 @@ def foodHeuristic(state, problem):
       problem.heuristicInfo['wallCount'] = problem.walls.count()
     Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
     """
+
+    start_time = time.time()
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    foodList = foodGrid.asList()
+    permFoodList = []
+
+
+    for x in range(foodGrid.width):
+        for y in range(foodGrid.height):
+            if(foodGrid[x][y]):
+                found = False
+                for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                    if not found:
+                        dx,dy = Actions.directionToVector(action)
+                        nextx = x+int(dx)
+                        nexty = y+int(dy)
+                        if foodGrid[nextx][nexty] == False and problem.walls[nextx][nexty] == False:
+                            permFoodList.append((x,y))
+                            found = True
+
+
+
+
+
+    key = "perm" + str(permFoodList)
+    foodPermutations = []
+    if key in problem.heuristicInfo:
+        foodPermutations = problem.heuristicInfo[key]
+    else:
+        foodPermutations = permutations(permFoodList)
+        problem.heuristicInfo[key] = foodPermutations
+
+
+
+    value = 0
+    x,y = position
+    for dx,dy in permFoodList:
+        value+= math.fabs(x-dx)
+        value+= math.fabs(y-dy)
+        x = dx
+        y = dy
+
+    print(len(foodPermutations))
+
+    for permutation in foodPermutations:
+        x,y = position
+        value2 =0
+        for dx,dy in permutation:
+            value2 += math.fabs(x-dx)+math.fabs(y-dy)
+
+            x = dx
+            y = dy
+
+        if value2 < value:
+            value = value2
+    print(time.time() - start_time)
+
+    return value
 
 
 class ClosestDotSearchAgent(SearchAgent):
