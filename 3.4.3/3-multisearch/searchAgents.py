@@ -503,7 +503,8 @@ def foodHeuristic(state, problem):
     foodList = foodGrid.asList()
     permFoodList = []
 
-
+    #Only consider permutatios between food pellets wich are not surrounded by walls/other pellets.
+    #This means we only consider permutations between pellets that can directly been reached. reducing permutation space to 8! instead of 13!
     for x in range(foodGrid.width):
         for y in range(foodGrid.height):
             if(foodGrid[x][y]):
@@ -520,7 +521,7 @@ def foodHeuristic(state, problem):
 
 
 
-
+    #calculate permutations and store/load in/from dictionary to avoid double work.
     key = "perm" + str(permFoodList)
     foodPermutations = []
     if key in problem.heuristicInfo:
@@ -530,7 +531,7 @@ def foodHeuristic(state, problem):
         problem.heuristicInfo[key] = foodPermutations
 
 
-
+    #calculate which permutation has the lowest cost, by looping over all permutations and calculating the cost for each path.
     value = 0
     x,y = position
     for dx,dy in permFoodList:
@@ -550,8 +551,9 @@ def foodHeuristic(state, problem):
 
         if value2 < value:
             value = value2
-    #print(time.time() - start_time)
 
+
+    #This part is only here for display purposes, so that it's easier to monitor how much nodes are expanded in what time.
     key = "prev_expanded"
     timeKey = 'prevTime'
     totalTimeKey = 'totalTime'
