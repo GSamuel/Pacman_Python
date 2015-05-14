@@ -498,7 +498,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access problem.heuristicInfo['wallCount']
     """
 
-    start_time = time.time()
+
     position, foodGrid = state
     foodList = foodGrid.asList()
     permFoodList = []
@@ -539,8 +539,6 @@ def foodHeuristic(state, problem):
         x = dx
         y = dy
 
-    print(len(foodPermutations))
-
     for permutation in foodPermutations:
         x,y = position
         value2 =0
@@ -552,7 +550,27 @@ def foodHeuristic(state, problem):
 
         if value2 < value:
             value = value2
-    print(time.time() - start_time)
+    #print(time.time() - start_time)
+
+    key = "prev_expanded"
+    timeKey = 'prevTime'
+    totalTimeKey = 'totalTime'
+    if key in problem.heuristicInfo:
+        num = problem.heuristicInfo[key]
+        val = int(problem._expanded /10)
+        prevTime = problem.heuristicInfo[timeKey]
+        totalTime = problem.heuristicInfo[totalTimeKey]
+        duration = time.time()-prevTime
+        if val > num:
+            print("{0} expanded. duration: {1}. total time: {2}".format(val*10,duration,totalTime))
+            problem.heuristicInfo[key]= val
+            problem.heuristicInfo[timeKey] = time.time()
+            problem.heuristicInfo[totalTimeKey] = totalTime+duration
+    else:
+        print("{0} expanded. duration: {1}. total time: {2}".format(0,0,0))
+        problem.heuristicInfo[key] = 0
+        problem.heuristicInfo[timeKey] = time.time()
+        problem.heuristicInfo[totalTimeKey] = 0
 
     return value
 
