@@ -559,13 +559,13 @@ def foodHeuristic(state, problem):
         num = problem.heuristicInfo[key]
         val = int(problem._expanded /10)
         prevTime = problem.heuristicInfo[timeKey]
-        totalTime = problem.heuristicInfo[totalTimeKey]
         duration = time.time()-prevTime
+        totalTime = problem.heuristicInfo[totalTimeKey]+duration
         if val > num:
             print("{0} expanded. duration: {1}. total time: {2}".format(val*10,duration,totalTime))
             problem.heuristicInfo[key]= val
             problem.heuristicInfo[timeKey] = time.time()
-            problem.heuristicInfo[totalTimeKey] = totalTime+duration
+            problem.heuristicInfo[totalTimeKey] = totalTime
     else:
         print("{0} expanded. duration: {1}. total time: {2}".format(0,0,0))
         problem.heuristicInfo[key] = 0
