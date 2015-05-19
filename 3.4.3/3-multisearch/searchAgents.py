@@ -603,8 +603,30 @@ class ClosestDotSearchAgent(SearchAgent):
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        frontier = []
+        visited = []
+        frontier.append((startPosition,0,[]))
+        while frontier:
+            (x,y),v,p = frontier.pop(0)
+
+            if food[x][y]:
+                print(p)
+                return p
+
+            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                dx, dy = Actions.directionToVector(action)
+                nextx =int(x + dx)
+                nexty = int(y + dy)
+                visit = False
+                for pos,val,path in visited:
+                    if(pos == (nextx,nexty)):
+                        visit = True
+
+                if not visit and not walls[nextx][nexty]:
+                    frontier.append(((nextx,nexty),v+1, p + [action]))
+
+            visited.append(((x,y),v,p))
+
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
