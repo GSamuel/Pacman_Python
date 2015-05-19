@@ -521,29 +521,36 @@ def foodHeuristic(state, problem):
 
 
 
-    #calculate permutations aionsnd store/load in/from dictionary to avoid double work.
+    #calculate permutations and store/load in/from dictionary to avoid double work.
     key = "perm" + str(permFoodList)
-    permDict = {}
+    foodPermutations = []
     if key in problem.heuristicInfo:
-        permDict = problem.heuristicInfo[key]
+        foodPermutations = problem.heuristicInfo[key]
     else:
-        permDict = findShortestPaths(permutations(permFoodList))
-        problem.heuristicInfo[key] = permDict
+        foodPermutations = permutations(permFoodList)
+        problem.heuristicInfo[key] = foodPermutations
 
 
     #calculate which permutation has the lowest cost, by looping over all permutations and calculating the cost for each path.
-    pellet = permFoodList[0]
-    pelX,pelY = pellet
+    value = 0
     x,y = position
-    value =math.fabs(x-pelX)+math.fabs(y-pelY)
+    for dx,dy in permFoodList:
+        value+= math.fabs(x-dx)
+        value+= math.fabs(y-dy)
+        x = dx
+        y = dy
 
-    for pel2X,pel2Y in permFoodList:
-        value2 = math.fabs(x-pel2X)+math.fabs(y-pel2Y)
-        if value2< value:
-            pellet = (pel2X,pel2Y)
+    for permutation in foodPermutations:
+        x,y = position
+        value2 =0
+        for dx,dy in permutation:
+            value2 += math.fabs(x-dx)+math.fabs(y-dy)
+
+            x = dx
+            y = dy
+
+        if value2 < value:
             value = value2
-
-    value += permDict[str(pellet)]
 
 
     #This part is only here for display purposes, so that it's easier to monitor how much nodes are expanded in what time.
@@ -568,33 +575,6 @@ def foodHeuristic(state, problem):
         problem.heuristicInfo[totalTimeKey] = 0
 
     return value
-
-#function that reduces list with all possible permutations to a dict with the value of the shortest path that begins on each node.
-def findShortestPaths(permu):
-    import math
-    shortest = {}
-
-    for perm in permu:
-        beginPos = perm[0]
-        x,y = beginPos
-
-        value =0
-        for dx,dy in perm:
-            value += math.fabs(x-dx)+math.fabs(y-dy)#manhattan distance
-
-            x = dx
-            y = dy
-
-        if str(beginPos) in shortest:
-            if value < shortest[str(beginPos)]:
-                shortest[str(beginPos)] = value
-        else:
-            shortest[str(beginPos)] = value
-
-    return shortest
-
-
-
 
 
 class ClosestDotSearchAgent(SearchAgent):
