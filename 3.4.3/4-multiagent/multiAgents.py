@@ -70,24 +70,32 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         value = 0
-        foodList = oldFood.asList()
+        foodList = oldFood.asList() + currentGameState.getCapsules()
 
+        ghostPosList = []
         for ghost in newGhostStates:
-            ghostPos = ghost.getPosition()
-            ghostDist = manhattanDistance(newPos,ghostPos)
-            if ghostDist<2:
+            ghostPosList.append(ghost.getPosition())
+
+
+        oldDist = self.closestDist(ghostPosList,oldPos)
+        newDist = self.closestDist(ghostPosList,newPos)
+
+        if ghost.scaredTimer > newDist:
+            return oldDist - newDist+1
+        else:
+            if newDist<2:
                 return -999
 
-        oldDist = self.closestFoodDist(foodList,oldPos)
-        newDist = self.closestFoodDist(foodList,newPos)
+        oldDist = self.closestDist(foodList,oldPos)
+        newDist = self.closestDist(foodList,newPos)
 
         return oldDist - newDist
 
-    def closestFoodDist(self, foodList, pos):
-        if foodList:
-            value = manhattanDistance(foodList[0],pos)
-            for food in foodList:
-                value2 = manhattanDistance(food,pos)
+    def closestDist(self, list, pos):
+        if list:
+            value = manhattanDistance(list[0],pos)
+            for listPos in list:
+                value2 = manhattanDistance(listPos,pos)
                 value = value if value < value2 else value2
             return value
         else:
@@ -152,9 +160,22 @@ class MinimaxAgent(MultiAgentSearchAgent):
           gameState.getNumAgents():
             Returns the total number of agents in the game
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
+        actions = gameState.getLegalActions(0)
+        depth = 0
+        while depth < self.depth:
+            max = depth % 2 == 0
+
+            if max:
+                print(max)
+                #pacman max
+            else:
+                print(max)
+                #ghosts min
+
+            depth += 1
+
+        return actions[0]
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
