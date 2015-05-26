@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Week 4: Multi-Agent PacMan</title>
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		TD P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H5.western { font-style: normal }
+		H5.cjk { font-style: normal }
+		H5.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		PRE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "Courier New", "Courier", "mono"; font-style: normal; font-weight: normal; line-height: 100% }
+		BLOCKQUOTE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		DT { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		DD { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+<h2>Week 4: Multi-Agent PacMan</h2>
+
+<!--announcements-->
+
+<blockquote>
+<center>
+<img src="pacman_multi_agent.png" width="400px">
+</center>
+  <p><cite><center>PacMan, now with ghosts.<br>
+  Evaluation, Minimax, Alpha-beta-pruning.</center></cite></p>
+</blockquote>
+<h3>Introduction</h3>
+
+<p> Oh No! Now there is a ghost around who for some reason is trying to kill PacMan (or even, if that's not bad enough,
+several ghosts)! PacMan needs some way of planning to achieve his goals of eating the pellets, whilst avoiding the ghosts.
+As we don't know how clever the ghosts are, for now we will assume they are very clever (act optimally to get PacMan). <BR>
+In this project, you will design agents for the classic version of PacMan, including ghosts. Along the way, you will
+implement minimax search without and with &alpha;-&beta;-pruning, and try your hand at evaluation function design.
+
+<p>The code base has changed a bit from the previous projects, so please start with a fresh installation, rather than
+intermingling files from earlier weeks. You can, however, copy-paste your own code or the example solutions in
+<code><a href="search.py">search.py</a></code> and <code><a href="searchAgents.py">searchAgents.py</a></code> in any way
+you want.
+
+<p>The code for this project contains the following files, available as a <a href="4-multiagent.zip">zip
+archive</a>.  
+
+<p><B>Key files to read</B></p>
+
+<table cellpadding=2 cellspacing=2>
+  <TR>
+    <TD>
+      <code><a href="multiAgents.py">multiAgents.py</a></code>
+    <TD>
+      <P>Where all of your multi-agent search agents will reside.</P>
+  <TR>
+    <TD>
+      <code><a href="pacman.py">pacman.py</a></code>
+    <TD>
+      <P>The main file that runs PacMan games. This file also describes a PacMan <code>GameState</code> type,
+         which you will use extensively in this project</P>
+  <TR>
+    <TD>
+      <code><a href="game.py">game.py</a></code>
+    <TD>
+      <P>The logic behind how the PacMan world works. This file describes several supporting types like AgentState,
+        Agent, Direction, and Grid.</P>
+  <TR>
+    <TD>
+      <code><a href="util.py">util.py</a></code>
+    <TD>
+      <P>Useful data structures for implementing search algorithms.</P>
+</table>  
+
+<p><B>Files you can ignore</B></p>
+
+<table cellpadding=2 cellspacing=2>
+  <tr>
+    <td>
+      <code><a href="graphicsDisplay.py">graphicsDisplay.py</a></code>
+    <td>
+      <P>Graphics for PacMan</P>
+  <tr>
+    <td>
+      <code><a href="graphicsUtils.py">graphicsUtils.py</a></code>
+    <td>
+      <P>Support for PacMan graphics</P>
+  <tr>
+    <td>
+      <code><a href="textDisplay.py">textDisplay.py</a></code>
+    <td>
+      <P>ASCII graphics for PacMan</P>
+  <tr>
+    <td>
+      <code><a href="ghostAgents.py">ghostAgents.py</a></code>
+    <td>
+      <P>Agents to control ghosts</P>
+  <tr>
+    <td>
+      <code><a href="keyboardAgents.py">keyboardAgents.py</a></code>
+    <td>
+      <P>Keyboard interfaces to control PacMan</P>
+    <tr>
+      <td>
+        <code><a href="layout.py">layout.py</a></code>
+      <td>
+        <P>Code for reading layout files and storing their contents</P>
+</table>
+
+<p><B>What to submit:</B></p>
+<p>You will fill in portions of <code><a href="multiAgents.py">multiAgents.py</a></code>
+during the assignment. You should submit this file with your code and comments.  You may also submit supporting files
+(like <code><a href="search.py">search.py</a></code>, etc.) that you use in your code.
+Please <em>do not</em> change the other files in this distribution or submit any of our original files other than
+<code><a href="multiAgents.py">multiAgents.py</a></code>. <strong>Make sure that you submit the (source) .py files,
+not the (compiled) .pyc files! </strong>
+</p>
+
+<h3>Multi-Agent PacMan</h3>
+<p>First, play a game of classic PacMan:
+
+<pre>python pacman.py</pre>
+
+<p>Now, run the provided <code>ReflexAgent</code> in <code><a href="multiAgents.py">multiAgents.py</a></code>:
+
+<pre>python pacman.py -p ReflexAgent</pre>
+
+<p>Note that it plays quite poorly even on simple layouts:
+
+<pre>python pacman.py -p ReflexAgent -l testClassic</pre>
+
+<p>Inspect its code (in <code><a href="multiAgents.py">multiAgents.py</a></code>) and make sure you understand what
+it's doing. <BR>
+
+<p><BR>
+<em><strong><u>Assignment 1:</u></strong></em> <BR>
+Improve the <code>ReflexAgent</code> in <code><a href="multiAgents.py">multiAgents.py</a></code> to play respectably.
+The provided reflex agent code provides some helpful examples of methods that query the <code>GameState</code> for
+information. In addition, you might find the following methods useful (but remember that you can get a listing of all
+methods for an object by typing <code>dir(&lt;objectName&gt;)</code> in the python run window): <BR>
+<table cellpadding=2 cellspacing=2>
+  <tr>
+    <td>
+      <code>&lt;gameState&gt;.isWin()</code>
+    <td>
+      <P>returns <code>True</code> if the game state is a winning one (all food eaten)</code></P>
+  <tr>
+    <td>
+      <code>&lt;gameState&gt;.isLose()</code>
+    <td>
+      <P>returns <code>True</code> if the game state is a losing one (pacman died)</code></P>
+  <tr>
+    <td>
+      <code>&lt;agentState&gt;.getPosition()</code>
+    <td>
+      <P>returns an (x,y) tuple with the current position of the agent (pacman or ghost)</P>
+  <tr>
+    <td>
+      <code>&lt;ghostState&gt;.scaredTimer</code>
+    <td>
+      <P>gets you the number of turns that the ghost will remain scared (0 if it currently isn't)</P>
+</table>
+
+<p>A capable reflex agent will have to consider both food locations and ghost locations to perform well. Your
+agent should easily and reliably clear the <code>testClassic</code> layout:
+
+<pre>python pacman.py -p ReflexAgent -l testClassic</pre>
+
+<p>Try out your reflex agent on the default <code>mediumClassic</code> layout with one ghost or two (and animation off to speed up the display):
+
+<pre>python pacman.py --frameTime 0 -p ReflexAgent -k 1</pre>
+
+<pre>python pacman.py --frameTime 0 -p ReflexAgent -k 2</pre>
+
+<p>How does your agent fare?  It will likely often die with 2 ghosts on the default board, unless your evaluation function is quite good.      
+
+<p><em>Note:</em> you can never have more ghosts than the layout permits. For <a href="layouts/mediumClassic.lay">mediumClassic</a> that amount is two. So <code> -k 3</code> will still get you only two ghosts.
+
+<p><em>Note:</em> As features, try the reciprocal of important values (such as distance to food) rather than just the values themselves.
+<p><em>Note:</em> The evaluation function you're writing is evaluating state-action pairs; in later parts of this project, you'll be evaluating states. 
+
+<p><em>Options:</em> Default ghosts are random; you can also play for fun with slightly smarter directional ghosts using <code>-g DirectionalGhost</code>.  If the randomness is preventing you from telling whether your agent is improving, you can use <code>-f</code> to run with a fixed random seed (same random choices every game).  You can also play multiple games in a row with <code>-n</code>.  Turn off graphics with <code>-q</code> to run lots of games quickly.</p> 
+
+<p>We will will check that your agent can rapidly clear the
+<code>openClassic</code> layout ten times without dying more than twice or thrashing around infinitely (i.e. repeatedly moving back and forth between two positions, making no progress).  
+
+<pre>python pacman.py -p ReflexAgent -l openClassic -n 10 -q</pre>
+
+<p>Don't spend too much time on this question, though, as the meat of the project lies ahead.</p>
+
+<p><BR>
+<em><strong><u>Assignment 2:</u></strong></em> <BR>
+Now you will write an adversarial search agent in the provided <code>MinimaxAgent</code> class stub in
+<code><a href="multiAgents.py">multiAgents.py</a></code>.  For now, your minimax agent only needs to work with one ghost
+(extra credit assignment B will ask you to extend the algorithm to any number of ghosts). You can use the pseudo-algorithm
+in P&M (page 432) and strip out the alpha-beta parts.
+
+<p> Your code should expand the game tree to the depth given in the 'depth' argument, and stored in <code>self.depth</code>.
+Score the leaves of your minimax tree (i.e. the nodes at the depth limit) with the supplied <code>self.evaluationFunction</code>,
+which defaults to <code>scoreEvaluationFunction</code>. <code>MinimaxAgent</code> extends <code>MultiAgentAgent</code>,
+which gives access to <code>self.depth</code> and <code>self.evaluationFunction</code>. Make sure your minimax code makes
+reference to these two variables where appropriate as these variables are populated in response to command line options.
+
+<p><em>Important:</em> A single search ply is considered to be one PacMan move and the ghost's response, so depth 2 search will involve PacMan and the ghost each moving two times.</p>
+
+
+<p><em><strong>Hints and Observations</strong></em>
+<ul>
+<li>
+<P>The evaluation function in this part is already written (<code>self.evaluationFunction</code>).You shouldn't
+change this function, but recognize that now we're evaluating *states* rather than actions, as we were for the reflex
+agent. Look-ahead agents evaluate future states whereas reflex agents evaluate actions from the current state.</P>
+<li>
+<P>The minimax values of the initial state in the <code>minimaxClassic</code> layout with one ghost are 9, 8, 7, 536 for
+depths 1, 2, 3 and 4 respectively. Note that your minimax agent predicts a win at depth 4, but still has a low expectation
+at depth 3, i.e. it does not see the win coming at lower depths. This is due to the weakness of the provided state evaluation
+function, which simply evaluates a state by its game score.
+<pre>python pacman.py -p MinimaxAgent -l minimaxClassic -a depth=4 -k 1</pre> </P>
+<li>
+<P>To increase the search depth achievable by your agent, remove the <code>Directions.STOP</code> action from PacMan's list
+of possible actions. Depth 2 should be pretty quick, but depth 3 or 4 will be slow.  Don't worry, the next question will
+speed up the search somewhat.</P>
+<li>
+<P>PacMan is always agent 0, and the ghost(s) are agent(s) 1 - n. The agents move in order of increasing agent index.</P>
+<li>
+<P>All states in minimax should be <code>GameStates</code>, either passed in to <code>getAction</code> or generated via
+<code>GameState.generateSuccessor</code>. In this project, you will not be abstracting to simplified states. </P>
+<li>
+<P>On larger boards such as <code>openClassic</code> and <code>mediumClassic</code> (the default), you'll find PacMan to
+be good at not dying, but quite bad at winning. He'll often thrash around without making progress. He might even thrash
+around right next to a dot without eating it because he doesn't know where he'd go after eating that dot.  Don't worry
+if you see this behavior, a better evaluation function (extra credit assignment A) will clean up all of these issues.</P>
+<li>
+<P>When PacMan believes that his death is unavoidable, he will try to end the game as soon as possible because of the
+constant penalty for living.  Sometimes, this is the wrong thing to do with random ghosts, but minimax agents always
+assume the worst: </P>
+<pre>python pacman.py -p MinimaxAgent -l trappedClassic -a depth=3 -k 1 </pre>
+<P>Make sure you understand why PacMan rushes the ghost in this case.</P>
+</ul>
+
+<p><BR>
+<em><strong><u>Assignment 3:</u></strong></em> <BR>
+Make a new agent that uses alpha-beta pruning to more efficiently explore the minimax tree, in <code>AlphaBetaAgent</code>.
+In principle this should be fairly easy, following the P&M pseudo-code on page 432, <strong>if only</strong> that
+pseudo-code would not be <strong>wrong</strong>: where it says <code>return &beta;</code> on line 13, that should be
+<code>return &alpha;</code>, and where it says <code>return &alpha;</code>  on line 19, that should be
+<code>return &beta;</code>. So beware!
+
+<p> You should see a speed-up (perhaps depth 3 alpha-beta will run as fast as depth 2 minimax). Ideally, depth 3 on
+<code>smallClassic</code> should run in just a few seconds per move or faster.
+
+<pre>python pacman.py -p AlphaBetaAgent -a depth=3 -l smallClassic -k 1</pre>
+
+<p> The <code>AlphaBetaAgent</code> minimax values should be identical to the <code>MinimaxAgent</code> minimax values,
+although the actions it selects can vary because of different tie-breaking behavior.  Again, the minimax values of the
+initial state in the <code>minimaxClassic</code> layout are 9, 8, 7 and 536 for depths 1, 2, 3 and 4 respectively.
+<BR>
+
+<h3>BONUS: better evaluation and/or more opponents</h3>
+
+<p>There are two bonus assignments. You can choose which one to hand in for your extra credit points. You will not get
+double credit points if you hand in both.
+
+<p><em><strong><u>Extra credit assignment A:</u></strong></em> <BR>
+Write a better evaluation function for pacman in the provided function
+<code>betterEvaluationFunction</code>.  The evaluation function should evaluate states, rather than actions like your reflex agent evaluation function did.  You may use any tools at your disposal for evaluation, including your search code (or the example solution code) from the last project.  With depth 2 search, your evaluation function should clear the <code>smallClassic</code> layout with one random ghost most of the times and still run at a reasonable rate (to get full credit, PacMan should be averaging around 1000 points when he's winning).
+
+<pre>python pacman.py -l smallClassic -p MinimaxAgent -a evalFn=better -q -n 10 -k 1</pre>
+
+<p>Document your evaluation function!  We're very curious about what great ideas you have, so don't be shy.
+
+<p><em><strong>Hints and Observations</strong></em>
+<ul>
+<li>
+<P>Like for your reflex agent evaluation function, you may want to use the reciprocal of important values (such as
+distance to food) rather than the values themselves.</P></li>
+<li>
+<P>One way you might want to write your evaluation function is to use a linear combination of features. That is, compute
+values for features about the state that you think are important, and then combine those features by multiplying them by
+different values and adding the results together. You might decide what to multiply each feature by based on how important
+you think it is.</P></li>
+</ul>
+
+<p><em><strong><u>Extra credit assignment B:</u></strong></em> <BR>
+Extend your alpha-beta-minimax algorithm to work with any number of ghosts, by filling in the
+<code>MultiAlphaBetaAgent</code> class stub. This means writing an algorithm that is slightly more general than what
+appears in P&M. In particular, your minimax tree will have multiple min layers (one for each ghost) for every max layer,
+and you should extend the alpha-beta pruning logic appropriately to multiple minimizer agents.
+
+<p>The minimax values of the initial state in the <code>minimaxClassic</code> layout with two ghost are 9, 8, 7, -492 for
+depths 1, 2, 3 and 4 respectively. Note that your minimax agent will now predict a loss at depth 4 (instead of the win
+when there was one ghost). But also note that your agent will in fact often win, despite the dire prediction of depth 4
+minimax. This is, of course, because minimax assumes that all ghost play optimally, whilst in fact these (default) ghosts
+move randomly.
+
+</body>
+
+</html>

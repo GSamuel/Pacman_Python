@@ -521,7 +521,7 @@ def foodHeuristic(state, problem):
 
 
 
-    #calculate permutations aionsnd store/load in/from dictionary to avoid double work.
+    #calculate permutations aionsnd store/load in from dictionary to avoid double work.
     key = "perm" + str(permFoodList)
     permDict = {}
     if key in problem.heuristicInfo:
