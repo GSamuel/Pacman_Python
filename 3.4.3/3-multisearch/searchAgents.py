@@ -1,3 +1,6 @@
+#Gideon Hoogeveen s4150538
+#Laura Snijder s4203569
+
 # searchAgents.py
 # ---------------
 # Licensing Information: Please do not distribute or publish solutions to this
@@ -532,18 +535,21 @@ def foodHeuristic(state, problem):
 
 
     #calculate which permutation has the lowest cost, by looping over all permutations and calculating the cost for each path.
-    pellet = permFoodList[0]
-    pelX,pelY = pellet
-    x,y = position
-    value =math.fabs(x-pelX)+math.fabs(y-pelY)
+    if permFoodList:
+        pellet = permFoodList[0]
+        pelX,pelY = pellet
+        x,y = position
+        value =math.fabs(x-pelX)+math.fabs(y-pelY)
 
-    for pel2X,pel2Y in permFoodList:
-        value2 = math.fabs(x-pel2X)+math.fabs(y-pel2Y)
-        if value2< value:
-            pellet = (pel2X,pel2Y)
-            value = value2
+        for pel2X,pel2Y in permFoodList:
+            value2 = math.fabs(x-pel2X)+math.fabs(y-pel2Y)
+            if value2< value:
+                pellet = (pel2X,pel2Y)
+                value = value2
 
-    value += permDict[str(pellet)]
+        value += permDict[str(pellet)]
+    else:
+        value = 0
 
 
     #This part is only here for display purposes, so that it's easier to monitor how much nodes are expanded in what time.
@@ -575,6 +581,8 @@ def findShortestPaths(permu):
     shortest = {}
 
     for perm in permu:
+        if not perm:
+            return shortest
         beginPos = perm[0]
         x,y = beginPos
 
