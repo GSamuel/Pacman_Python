@@ -161,21 +161,29 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
 
-        actions = gameState.getLegalActions(0)
-        depth = 0
-        while depth < self.depth:
-            max = depth % 2 == 0
+        return self.minMaxRecursion(gameState,0)[0][0]
 
-            if max:
-                print(max)
-                #pacman max
-            else:
-                print(max)
-                #ghosts min
+    def minMaxRecursion(self,gameState, curDepth=0):
+        if curDepth >= self.depth:
+            return ([],scoreEvaluationFunction(gameState))
 
-            depth += 1
+        agentIndex = curDepth% gameState.getNumAgents()
+        actions = gameState.getLegalActions(agentIndex)
 
-        return actions[0]
+        actionScores = []
+        for action in actions:
+            succ = gameState.generateSuccessor(agentIndex,action)
+            path, score = self.minMaxRecursion(succ, curDepth+1)
+            actionScores.append(([action]+path,score))
+
+        if not actionScores:
+            return ([],scoreEvaluationFunction(gameState))
+
+
+        if agentIndex == 0:
+            return max(actionScores, key = lambda t: t[1])
+
+        return min(actionScores, key = lambda t: t[1])
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
