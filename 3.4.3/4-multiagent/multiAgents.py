@@ -168,7 +168,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     def minMaxRecursion(self,gameState, curDepth=0):
         agentIndex = curDepth% gameState.getNumAgents()
         actions = gameState.getLegalActions(agentIndex)
-        max = agentIndex == 0
+        isMax = agentIndex == 0
 
         if curDepth >= self.depth or not actions:
             return ([],scoreEvaluationFunction(gameState))
@@ -179,7 +179,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             path, score = self.minMaxRecursion(succ, curDepth+1)
             actionScores.append(([action]+path,score))
 
-        if max:
+        if isMax:
             return max(actionScores, key = lambda t: t[1])
 
         return min(actionScores, key = lambda t: t[1])
@@ -201,29 +201,59 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     def alphaBetaRecursion(self,gameState, curDepth=0, alpha = -float('Inf'), beta = float('Inf')):
         agentIndex = curDepth% gameState.getNumAgents()
         actions = gameState.getLegalActions(agentIndex)
-        max = agentIndex == 0
+        isMax = agentIndex == 0
 
         if curDepth >= self.depth or not actions:
-            if max:
-                alpha = scoreEvaluationFunction(gameState)
-            else:
-                beta = scoreEvaluationFunction(gameState)
+            return ([],scoreEvaluationFunction(gameState))
 
-            return ([],(alpha,beta))
 
-        actionScores = []
-        for action in actions:
-            succ = gameState.generateSuccessor(agentIndex,action)
-            path, (alp,bet) = self.alphaBetaRecursion(succ, curDepth+1, alpha, beta)
-            if max:
-                beta = max([beta,bet])
+        #actionScores = []
 
-            actionScores.append(([action]+path,score))
+        #new
 
-        if max:
-            return max(actionScores, key = lambda t: t[1])
+        returnPath = []
 
-        return min(actionScores, key = lambda t: t[1])
+        if isMax:
+            for action in actions:
+                succ = gameState.generateSuccessor(agentIndex,action)
+                path, score = self.alphaBetaRecursion(succ, curDepth+1, alpha, beta)
+                if(score> alpha):
+                    alpha = score
+                    returnPath = [action]+path
+                if alpha >= beta:
+                    return ([action]+path, beta)
+
+            return (returnPath, alpha)
+        else:
+            for action in actions:
+                succ = gameState.generateSuccessor(agentIndex,action)
+                path, score = self.alphaBetaRecursion(succ, curDepth+1, alpha, beta)
+                if(score < beta):
+                    beta = score
+                    returnPath = [action]+path
+                if alpha >= beta:
+                    return ([action]+path, alpha)
+
+            return (returnPath, beta)
+
+
+        #end
+
+        #
+        # for action in actions:
+        #     succ = gameState.generateSuccessor(agentIndex,action)
+        #     path, (alp,bet) = self.alphaBetaRecursion(succ, curDepth+1, alpha, beta)
+        #     if isMax:
+        #         alpha = max([alpha, bet])
+        #     else:
+        #         beta = min([beta,alp])
+        #
+        #     actionScores.append(([action]+path,(alpha,beta)))
+        #
+        # if isMax:
+        #     return max(actionScores, key = lambda t: t[1][0])
+        #
+        # return min(actionScores, key = lambda t: t[1][1])
 
 
 class MultiAlphaBetaAgent(MultiAgentSearchAgent):
