@@ -111,6 +111,7 @@ def scoreEvaluationFunction(currentGameState):
       This evaluation function is meant for use with adversarial search agents
       (not reflex agents).
     """
+    
     return currentGameState.getScore()
 
 
@@ -171,7 +172,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         isMax = agentIndex == 0
 
         if curDepth >= self.depth or not actions:
-            return ([],scoreEvaluationFunction(gameState))
+            return ([],self.evaluationFunction(gameState))
 
         actionScores = []
         for action in actions:
@@ -204,7 +205,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         isMax = agentIndex == 0
 
         if curDepth >= self.depth or not actions:
-            return ([],scoreEvaluationFunction(gameState))
+            return ([],self.evaluationFunction(gameState))
 
 
         #actionScores = []
