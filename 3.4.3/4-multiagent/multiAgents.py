@@ -11,6 +11,7 @@ from game import Directions
 import random, util
 
 from game import Agent
+from game import Actions
 
 
 class ReflexAgent(Agent):
@@ -163,7 +164,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
 
         path,cost = self.minMaxRecursion(gameState,0)
-        #print(cost)
         return path[0]
 
     def minMaxRecursion(self,gameState, curDepth=0):
@@ -293,12 +293,88 @@ def betterEvaluationFunction(currentGameState):
 
       DESCRIPTION: <write something here so we know what you did>
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    capsules = currentGameState.getCapsules()
+    amountFood = currentGameState.getNumFood() + len(capsules)
+    pacmanPos = currentGameState.getPacmanPosition()
+
+    amountGhosts = currentGameState.getNumAgents() - 1
+
+    ghostScore = 0
+    foodScore = -mazeDistanceClosestFood(currentGameState)
+    for x in range(amountGhosts):
+        ghost = currentGameState.getGhostState(x+1)
+        ghostPos = ghost.getPosition()
+        dist = manhattanDistance(ghostPos,pacmanPos)
+
+        if ghost.scaredTimer>0:
+            ghostScore = 200-2*mazeDistancePoint(pacmanPos,ghostPos,currentGameState)
+        elif dist < 2:
+            ghostScore = -1000
+
+
+    return - amountFood*100 + foodScore + ghostScore
+
+def closestDist(list, pos):
+        if list:
+            value = manhattanDistance(list[0],pos)
+            for listPos in list:
+                value2 = manhattanDistance(listPos,pos)
+                value = value if value < value2 else value2
+            return value
+        else:
+            return 0
 
 # Abbreviation
 better = betterEvaluationFunction
 
+def mazeDistanceClosestFood(gameState):
+
+    food = gameState.getFood()
+
+    frontier = []
+    visited = []
+
+    start = gameState.getPacmanPosition()
+    frontier.append((start,0))
+
+    while frontier:
+        ((x,y),length) = frontier.pop(0)
+        if food[x][y]:# als bevat voedsel.
+            return length # length
+        if (x,y) not in visited:
+            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                dx, dy = Actions.directionToVector(action)
+                nextx, nexty = int(x + dx), int(y + dy)
+                if not gameState.getWalls()[nextx][nexty]:
+                    frontier.append(((nextx,nexty),length+1))
+
+        visited.append((x,y))
+
+    return 99
+
+def mazeDistancePoint(p1,p2,gameState):
+
+    food = gameState.getFood()
+
+    frontier = []
+    visited = []
+
+    frontier.append((p1,0))
+
+    while frontier:
+        ((x,y),length) = frontier.pop(0)
+        if (x,y) == p2:# als bevat voedsel.
+            return length # length
+        if (x,y) not in visited:
+            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                dx, dy = Actions.directionToVector(action)
+                nextx, nexty = int(x + dx), int(y + dy)
+                if not gameState.getWalls()[nextx][nexty]:
+                    frontier.append(((nextx,nexty),length+1))
+
+        visited.append((x,y))
+
+    return 99
 
 class ContestAgent(MultiAgentSearchAgent):
     """
@@ -315,4 +391,6 @@ class ContestAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
+
+
 
