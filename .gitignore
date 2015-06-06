@@ -103,3 +103,6 @@ $RECYCLE.BIN/
 *.iml
 *.xml
 3.4.3/.idea/workspace.xml
+*.iml
+2.7.9/.idea/modules.xml
+*.xml
