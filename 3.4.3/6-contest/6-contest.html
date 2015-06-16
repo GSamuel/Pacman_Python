@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Contest: Pac-Man Survival</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.0.2.2 (Linux)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Jason Farquhar">
+	<META NAME="CHANGED" CONTENT="20130611;15035400">
+	<META NAME="ProgId" CONTENT="FrontPage.Editor.Document">
+	<STYLE TYPE="text/css">
+	<!--
+		P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		TD P { font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal; line-height: 120% }
+		H2 { border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 100% }
+		H2.western { font-style: normal }
+		H2.cjk { font-style: normal }
+		H2.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H3 { margin-top: 0.31in; border-top: none; border-bottom: 1px solid #527bbd; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.02in; padding-left: 0in; padding-right: 0in; font-variant: normal; color: #325b9d; line-height: 90% }
+		H3.western { font-style: normal }
+		H3.cjk { font-style: normal }
+		H3.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		H5 { font-variant: normal; color: #325b9d }
+		H5.western { font-style: normal }
+		H5.cjk { font-style: normal }
+		H5.ctl { font-family: "Lohit Hindi"; font-style: normal }
+		PRE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "Courier New", "Courier", "mono"; font-style: normal; font-weight: normal; line-height: 100% }
+		BLOCKQUOTE { border: none; padding: 0in; font-variant: normal; color: #333333; font-family: "verdana", "helvetica", "arial", sans-serif; font-size: 9pt; font-style: normal; font-weight: normal }
+		CODE.ctl { font-family: "Lohit Hindi", monospace }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#333333" DIR="LTR" STYLE="border: none; padding: 0in">
+<H2 CLASS="western">Contest: Pac-Man Survival!</H2>
+<BLOCKQUOTE STYLE="text-align: center"><IMG SRC="pacman_multi_agent.png" NAME="graphics1" ALIGN=BOTTOM WIDTH=400 HEIGHT=221 BORDER=0>
+</BLOCKQUOTE>
+<BLOCKQUOTE STYLE="margin-bottom: 0in; text-align: center"><CITE>In a
+post-apocalyptic world</CITE></BLOCKQUOTE>
+<BLOCKQUOTE STYLE="margin-bottom: 0in; text-align: center"><CITE>pacman
+must search for food</CITE></BLOCKQUOTE>
+<BLOCKQUOTE STYLE="margin-bottom: 0in; text-align: center"><CITE>whilst
+avoiding the zombie(ghost) hordes</CITE></BLOCKQUOTE>
+<BLOCKQUOTE STYLE="margin-bottom: 0in; text-align: center"><CITE>how
+long can he survive?</CITE></BLOCKQUOTE>
+<BLOCKQUOTE STYLE="text-align: center"><BR><BR>
+</BLOCKQUOTE>
+<H3 CLASS="western">Introduction</H3>
+<P STYLE="margin-bottom: 0in">The course contest involves a
+single-player survival-horror style Pac-man contest. Pacman must
+survive as a long as possible with a sequence of levels of increasing
+difficulty. The contest code is available as a <A HREF="6-contest.zip">zip
+file</A>. <BR></P>
+
+<P STYLE="margin-bottom: 0in">The code base has not changed much from
+the previous projects, but please start with a fresh installation,
+rather than intermingling files. You can, however, re-use code from
+your previous solutions in any way you want. <BR><BR></P>
+
+<P><B>Key files to read:</B></P>
+
+<TABLE WIDTH=703 CELLPADDING=10 CELLSPACING=0>
+	<COL WIDTH=174>
+	<COL WIDTH=489>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="pacman.py">pacman.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>The main file that runs games. This file also describes the new
+			capture the flag GameState type and rules.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="competitionAgents.py">competitionAgents.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Specification and helper methods for capture agents. 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="leaderboard.py">leaderboard.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>The file that runs all levels multiple times to compute the final leaderboard score for your agent.</P>
+		</TD>
+	</TR>
+    <TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in"></TD>
+		<TD WIDTH=489 VALIGN=TOP STYLE="border: none; padding: 0in"></TD>
+	</TR>
+</TABLE>
+
+<P><BR>
+<B>Supporting files:</B></P>
+
+<TABLE WIDTH=703 CELLPADDING=10 CELLSPACING=0>
+	<COL WIDTH=174>
+	<COL WIDTH=489>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="game.py">game.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>The logic behind how the Pac-Man world works. This file
+			describes several supporting types like AgentState, Agent,
+			Direction, and Grid.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="util.py">util.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Useful data structures for implementing search algorithms.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="distanceCalculator.py">distanceCalculator.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Computes shortest paths between all maze positions.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="graphicsDisplay.py">graphicsDisplay.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Graphics for Pac-Man.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="graphicsUtils.py">graphicsUtils.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Support for Pac-Man graphics.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="textDisplay.py">textDisplay.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>ASCII graphics for Pac-Man.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="keyboardAgents.py">keyboardAgents.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Keyboard interfaces to control Pac-Man.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=174 STYLE="border: none; padding: 0in">
+			<P><A HREF="layout.py">layout.py</A></P>
+		</TD>
+		<TD WIDTH=489 STYLE="border: none; padding: 0in">
+			<P>Code for reading layout files and storing their contents.</P>
+		</TD>
+	</TR>
+</TABLE>
+
+<P>
+<BR>
+<B>What to submit:</B></P>
+
+<P>You will fill in portions of
+<CODE CLASS="western"><A HREF="competitionAgents.py">competitionAgents.py</A></CODE>
+during the assignment. You should submit this file with your code and
+comments. Please <EM>do not</EM> change the
+other files in this distribution or submit any of our original files
+other than <CODE CLASS="western"><A HREF="competitionAgents.py">competitionAgents.py</A></CODE>.
+  
+</P>
+<P>Note: Please call your agent class <FONT COLOR="#ff0000"><U><B>MyPacmanAgent</B></U></FONT><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-weight: normal">
+and derive it from CompetitionAgent so we can automatically run the
+code with the following line:</SPAN></SPAN></FONT></P>
+<PRE STYLE="margin-bottom: 0.2in"><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-weight: normal">python pacman.py -p MyPacmanAgent</SPAN></SPAN></FONT></PRE>
+
+<H3 CLASS="western">Rules of Pac-Man Survival</H3>
+<P><B>Level Scoring:</B> When a Pacman eats a food dot, the food is
+permanently removed and ten points are scored. The general scoring
+rules are:</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in">-1 point for every Pacman move</P>
+	<LI><P STYLE="margin-bottom: 0in">+10 points for every food eaten</P>
+	<LI><P STYLE="margin-bottom: 0in">+200 for every ghost eaten</P>
+	<LI><P STYLE="margin-bottom: 0in">+500 for eating all the food in a
+	level. This also ends the level</P>
+	<LI><P STYLE="margin-bottom: 0in">-500 for dying, either through
+	running out of time or being eaten by a ghost</P>
+</UL>
+<P>A level ends when pacman has eaten all of the food dots (i.e. the
+power-capsules do not count as food!). Levels are also limited to
+3000 agent moves. If this move limit is reached pacman automatically
+dies! 
+</P>
+<P><B>Level Progression: </B><SPAN STYLE="font-weight: normal">There
+are a series of levels of increasing difficulty, starting from easy
+open worlds with lots of food and few ghosts, to the harder final
+levels where there is less food and more ghosts. In addition there
+are 3 ghost types (see below) and the later levels have more
+intelligent ghosts which pacman will find it harder to avoid.</SPAN></P>
+<P><B>Final Score: </B><SPAN STYLE="font-weight: normal">The
+tournament runs automatically over all the levels and the final score
+is the</SPAN> <B>sum</B> <SPAN STYLE="font-weight: normal">of the
+scores for each of the levels. (Note: </SPAN><B>Do not</B> <SPAN STYLE="font-weight: normal">hand-tune
+your agents for particular levels, as the final tournament will
+include some additional levels you have not seen before.)</SPAN></P>
+<P><B>Computation Time:</B> Each agent has 1 second to return each
+action. Each move which does not return within one (1) second will
+incur a warning. After three warnings, or any single move taking more
+than 3 seconds, the game is forfeit. There will be an initial
+start-up allowance of 15 seconds (use the <CODE CLASS="western">registerInitialState</CODE>
+function). You need to manage your computation time well! Be careful!</P>
+<P><B>Play Balancing:</B> Over the semester we will be improving the
+game. Several likely changes are: (1) time allowance, and (2) ongoing
+level redesign. 
+</P>
+<P STYLE="margin-bottom: 0in"><B>Ghosts: </B><SPAN STYLE="font-weight: normal">There
+are 3 types of ghosts in the pacman survival world: </SPAN>
+</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in; font-weight: normal">track-following
+	– this ghost continuously walks round the same random track on the
+	world, ignoring pacman and everything else in the world.</P>
+	<LI><P STYLE="margin-bottom: 0in"><SPAN STYLE="font-weight: normal">Random
+	</SPAN>– <SPAN STYLE="font-weight: normal">this ghost randomly
+	picks a direction at every point.</SPAN></P>
+	<LI><P STYLE="margin-bottom: 0in"><SPAN STYLE="font-weight: normal">Pacman-seeking
+	</SPAN>– <SPAN STYLE="font-weight: normal">with a probability of
+	.8 this ghost will move towards pacman (if not scared) or away from
+	pacman (if scared). With a probability of .2 this ghost makes a random
+	move.</SPAN></P>
+</UL>
+<P STYLE="margin-bottom: 0in; font-weight: normal">The early levels
+have mainly track-following ghosts, the later (and harder) levels
+have more pacman-seeking ghosts. 
+</P>
+<P STYLE="margin-bottom: 0in; font-weight: normal">(Hint: identifying
+the type of ghost based on it's behavior can very useful for building
+and effective pacman agent. For example, knowing the track a
+track-following agent is following allows you to predict where the
+ghost will be and hence move round it. Or staying a few moves away
+from a random agent is probably safe.</P>
+<H3 CLASS="western">Getting Started</H3>
+<P>By default, the system will run through all the levels in layouts in turn computing the score for your agent in each layout.  Thus to run all levels with a simple <B>reactive</B>
+<CODE CLASS="western">BaselineAgent</CODE> that the staff has
+provided: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -p BaselineAgent</PRE><P>
+To test with a specific game layout (rather than running through all
+the layouts in order) – in this case level3_4 the 'hardest' level
+in the competition (so far):</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -p BaselineAgent -l level3_4</PRE><P>
+A wealth of options are available to you are shown by: 
+</P>
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py --help</PRE><P>
+<P> To even out issues due to random bad-luck, the actual score of your agent is computed the sum of the average scores over 10 re-runs of each level.  You can run the same 10 re-runs with the <code>-n</code> option.  That is:
+<PRE STYLE="margin-bottom: 0.2in">python pacman.py -n 10 -p BaselineAgent</PRE><P>
+<p>(Note: that if you specify more than 1 re-run then pacman runs in <em>non-graphic</em> mode to save CPU time)</p>
+<p>Further to run the same code as used to generate the weekly leaderboards with your own agent (assuming this is in the <code>competitionAgents.py</code> file in the same directory) you can use:</p>
+<PRE STYLE="margin-bottom: 0.2in">python leaderboard.py --dir=. --num= --replay</PRE><P>
+<P>When finished this will make a file called <code>leaderboard.html</code> which contains the complete summary of the results for your agent, in the same format as used for the leaderboard on blackboard.  It also saves a summary of all the games played in <code>_games.pk</code>.</p>
+<P>Note: Please call your agent class <FONT COLOR="#ff0000"><U><B>MyPacmanAgent</B></U></FONT><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-weight: normal">
+and derive it from CompetitionAgent so we can automatically run the
+code with the following line:</SPAN></SPAN></FONT></P>
+<PRE STYLE="margin-bottom: 0.2in"><FONT COLOR="#000000"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-weight: normal">python pacman.py -p MyPacmanAgent</SPAN></SPAN></FONT></PRE><H3 CLASS="western">
+<A NAME="tournaments"></A>Official Tournaments</H3>
+<P>The actual competitions will be run using automated scoring, with
+the final tournament deciding the final contest outcome. To submit
+your agent, make sure to properly fill in <CODE CLASS="western"><A HREF="competitionAgents.py">competitionAgents.py</A>
+</CODE>and then <CODE CLASS="western">submit</CODE> your code via the blackboard assignment.
+Twice a week (on Tuesday and Thursdays, for code submitted before midnight) we will run all submitted agents
+and update the current score-board on the blackboard site, so as you can see how your agent is doing.
+</P>
+<H3 CLASS="western">Designing Agents</H3>
+<P>Like in the multi-agent project, your pacman must try to eat as much
+food as possible in the minimum number of moves whilst avoiding the
+ghosts as much as possible. However, the added time limit of
+computation introduces new challenges. 
+</P>
+<P><B>Baseline Agents:</B> To kickstart your agent design, we have
+provided you with a simple Baseline agent. It simply randomly wanders
+round eating food dots and avoiding ghosts. It generally dies very
+fast and does not normally clear even level 0_0.</P>
+<P><B>Interface:</B> The <CODE CLASS="western">GameState</CODE> in
+<CODE CLASS="western"><A HREF="pacman.py">pacman.py</A></CODE> should
+look familiar. Your interface in <CODE CLASS="western"><A HREF="competitionAgents.py">competitionAgents.py</A>
+</CODE>is also the same as you have used in the multi-agent project. 
+</P>
+<P><B>Distance Calculation: </B>To facilitate agent development, we
+provide code in <CODE CLASS="western"><A HREF="distanceCalculator.py">distanceCalculator.py</A></CODE>
+to supply shortest path maze distances. This class provides an fast
+way to get the true distance between any 2 arbitrary points. In
+addition it caches previous distance measurements to speed up later
+computations.</P>
+<P>To get started designing your own agent, we recommend subclassing
+the <CODE CLASS="western">CompetitionAgent</CODE> class. This
+provides access to several convenience methods. Some useful methods
+are: 
+</P>
+<PRE>  def getFood(self, gameState):
+    &quot;&quot;&quot;
+    Returns the food you can still eat. This is in the form
+    of a matrix where m[x][y]=True if there is food you can
+    eat in that square.
+    &quot;&quot;&quot;
+
+  def getScore(self, gameState):
+    &quot;&quot;&quot;
+    Returns your current score in the game.  Note: score is made up of:
+        -1 for every move (so complete the level fast!)
+        +10 for every food pellet eaten
+        +200 for every ghost eaten
+        +500 for eating all the food
+    &quot;&quot;&quot;
+
+  def getMazeDistance(self, pos1, pos2):
+    &quot;&quot;&quot;
+    Returns the distance between two points; These are calculated using the provided
+    distancer object.
+
+    N.B. You need to call distancer.getMazeDistances() in your registerInitialState() 
+        method to get the true distances, otherwise this just returns the Manhattan distance.    
+    &quot;&quot;&quot;</PRE><P>
+<B>Restrictions:</B> You are free to design any agent you want.
+However, you will need to respect the provided APIs if you want to
+participate in the tournaments. Agents which compute during the
+opponent's turn will be disqualified. In fact, we do not recommend
+any sort of multi-threading. 
+</P>
+<H3 CLASS="western">Contest Details</H3>
+<P>The contest has two parts: a qualifying round and a final
+tournament. 
+</P>
+<UL>
+	<LI><P><STRONG>Tournament:</STRONG> (details subject to change) A
+	final tournament will be open to the public and run on the final day
+	of the class. During this event selected entries will be run on a
+	beamer to show the agents performing well. We will select which
+	agents to show based on a pre-run the evening before – but will
+	definitely include the 5 best performing agents, and some selected
+	for 'interesting' behaviors. The final competition will be run on
+	layouts similar to the ones included in your competition pack (but
+	may be revised to manage difficulty to evoke interesting behavior).</P>
+	<P STYLE="margin-bottom: 0in"><B>Important dates (subject to
+	change):</B> 
+	</P>
+</UL>
+<DL>
+	<DD>
+	<TABLE WIDTH=490 CELLPADDING=0 CELLSPACING=0>
+		<COL WIDTH=98>
+		<COL WIDTH=130>
+		<COL WIDTH=260>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Thursday
+				</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 5</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>Contest announced and posted</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Monday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 9 (midnight)</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000">Deadline</FONT> for Tuesday leaderboard</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Tuesday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 10</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>Leaderboard updated</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Wednesday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 11 (midnight)</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000">Deadline</FONT> for Thursday leaderboard</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Thursday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 12</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>Leaderboard updated</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Monday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 16 (midnight)</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000">Deadline</FONT> for Tuesday leaderboard</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Tuesday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>June 17</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P>Leaderboard updated</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000">Wednesday</FONT></P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000">June 18 &nbsp;&nbsp; 09:00</FONT></P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P><FONT COLOR="#ff0000"><SPAN STYLE="background: transparent">Competition
+				Submission Deadline</SPAN></FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=98 STYLE="border: none; padding: 0in">
+				<P>Thursday</P>
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P STYLE="margin-bottom: 0in">June 19 &nbsp;&nbsp; 13:45</P>
+
+			</TD>
+			<TD STYLE="border: none; padding: 0in">
+				<P STYLE="margin-bottom: 0in">Final contest and Awards ceremony<BR>
+                TvA 4.00.37</P>
+			</TD>
+		</TR>
+	</TABLE>
+</DL>
+<H3 CLASS="western">Grading</H3>
+<P STYLE="margin-bottom: 0in; font-weight: normal">As with the other
+assignments, the grading consists of 2 main parts;</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in; font-weight: normal"><B>Code
+	quality</B> – how readable, clear, and <B>clever</B> your code is
+	(50% of the marks)</P>
+	<LI><P STYLE="margin-bottom: 0in; font-weight: normal"><B>Performance</B>
+	– how well your agent performs at the given task.  This will be
+	split into 2 further parts:</P>
+</UL>
+<OL>
+	<OL>
+		<LI><P STYLE="margin-bottom: 0in; font-weight: normal"><B>Qualifying</B>
+		: if you agent performs better than the 'Staff Agent' performance
+		then you have qualified and automatically get 50% of the
+		performance marks available, i.e. 25% of the competition total.</P>
+		<LI><P STYLE="margin-bottom: 0in; font-weight: normal"><B>Ranking</B>:
+		the remaining 50% of the performance marks are awarded in a
+		proportional fashion based on the ranking of your agent in the
+		final tournament.  That is if you are ranked first then you get all
+		the available marks, if you are ranked last of the qualifying
+		agents you get no additional marks, and if you rank in the middle
+		then you get half of the marks.</P>
+	</OL>
+</OL>
+<UL>
+	<LI><P STYLE="margin-bottom: 0in"><B>Prizes:</B> The top three teams
+	will receive awards in class, and extra credit points in their final
+	grade, i.e. you could score higher than 100%!</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0in">First Place: 4% final exam point increase
+		</P>
+		<LI><P STYLE="margin-bottom: 0in">Second Place: 3% final exam point increase
+		</P>
+		<LI><P STYLE="margin-bottom: 0in">Third Place: 2% final exam point increase
+		</P>
+	</UL>
+</UL>
+</BODY>
+</HTML>
