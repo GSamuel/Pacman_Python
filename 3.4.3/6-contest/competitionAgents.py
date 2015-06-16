@@ -191,20 +191,17 @@ class MyPacmanAgent(CompetitionAgent):
 
     def initFoodDistances(self, gameState):
         self.foodDistances = {}
-        foodList = gameState.getFood().asList()
+        foodList = gameState.getFood().asList() + gameState.getCapsules()
         for action in self.pacmanPositions:
             self.foodDistances[action] = self.foodDistance(self.pacmanPositions[action], foodList)
 
     def ghostDistance(self, pos, ghosts):
-        return [self.getMazeDistance(pos,ghost.getPosition()) for ghost in ghosts]
+        return [(self.getMazeDistance(pos,ghost.getPosition()), ghost.scaredTimer) for ghost in ghosts]
 
     def foodDistance(self,pos,foodList):
         return [self.getMazeDistance(pos,food) for food in foodList]
 
-
-
     def getAction(self, gameState):
-        import time
         """
         getAction chooses among the best options according to the evaluation function.
 
@@ -215,6 +212,8 @@ class MyPacmanAgent(CompetitionAgent):
         self.initGhostDistances(gameState)
         self.initFoodDistances(gameState)
 
+        direction = gameState.getPacmanState().getDirection()
+
         # Collect legal moves and successor states
         legalMoves = gameState.getLegalActions()
 
@@ -222,20 +221,69 @@ class MyPacmanAgent(CompetitionAgent):
         scores = [self.actionEvalFunction(action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
+        for ind in bestIndices:
+            if legalMoves[ind] == direction:
+                return direction
         chosenIndex = random.choice(bestIndices)  # Pick randomly among the best
 
         return legalMoves[chosenIndex]
 
+    #calculates a combined score
     def actionEvalFunction(self, action):
-        return self.foodScore(action) + self.ghostScore(action)
+        food = self.foodScore(action)
+        ghost = self.ghostScore(action)
+        if(ghost != 0):
+            return ghost
+        return food
 
+    #closer to ghost = -2 (within certain range)
+    #closer to scared ghost = 2
     def ghostScore(self,action,minDistance=2):
         #score based on distance difference before and after action
-        closest = min(self.ghostDistances[action])
-        if closest < minDistance:
-            return -5
-        return 0
+        #only looks for the closest ghost atm. can suicide on second closest ghost. (should consider all ghosts)
+        #ignores scared ghost that are second closest to pacman.(should consider all ghosts)
 
+        #avoid non scared ghosts at all cost
+        toClose = False
+        for dist,scaredTime in self.ghostDistances[action]:
+            if scaredTime <= 1 and dist < minDistance:
+                toClose = True
+        if toClose:
+            return -2
+
+        #search for the closest scared ghost
+        scaredGhost = False
+        closestScared = 99999
+        closest       = 99999
+        closer = 0
+        for i in range(len(self.ghostDistances[action])):
+            dist, scaredTime = self.ghostDistances[action][i]
+            oldDist, t = self.ghostDistances['init'][i]
+            if dist < scaredTime+1 and scaredTime!= 0 and dist < closestScared:
+                closestScared = dist
+                scaredGhost = True
+                closer = oldDist - dist
+            if dist < closest:
+                closest = dist
+
+
+        #closest,scared = min(self.ghostDistances[action],key=lambda x: x[0])
+        #closer,newScared = min(self.ghostDistances['init'],key=lambda x:x[0])
+        #closer -= closest
+
+        if closest < closestScared and closest < minDistance:
+            return -2
+
+        #scared ghosts
+        if scaredGhost and closer >0:
+            return 2
+        if scaredGhost and closer<0:
+            return -2
+
+        return 0 #no ghost to close or edible
+
+    #closer to food = 1
+    # further from food = -1
     def foodScore(self,action):
         #score based on distance difference before and after action
         return min(self.foodDistances['init']) - min(self.foodDistances[action])
