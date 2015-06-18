@@ -167,7 +167,19 @@ class TimeoutAgent(Agent):
         time.sleep(2.0)
         return random.choice(state.getLegalActions(self.index))
 
-
+"""
+TODO: pacman does not consider the respawn points of ghosts yet: When a ghosts gets eaten they respawn on their respawn point.
+I depending on whether an eaten ghost skips a turn pacman shouldnt eat a ghost on and maybe next to the ghosts respawn point.
+TODO: Pacman can still very easiliy be captured by 2 ghosts. Pacman does consider multiple ghosts at the same time, but still walks into
+corridors when a ghosts is clearly heading pacmans way.
+TODO: The same goes for paths with 1 length that lead to a dead end. Pacman should take the minimal steps a ghost can take to cornor pacman in a path into
+consideration.
+TODO: Power pellet optimalization: don't eat power pellets, when pacman is still able to eat close ghosts. Don't eat the last food when there are still
+power pellets left.
+TODO: There are 3 different type of agents. (fixed path, random agent and walk to pacman agent) Try to identify the ghosts by their behaviour as
+one of these 3 types. This can be usefull to predict their behaviour
+TODO: theres a bug when a ghost respawns (sometimes when it not just respawned) and their are stil other ghosts left that are sqared. Pacman ignores the non scared ghost and steps on it.
+"""
 class MyPacmanAgent(CompetitionAgent):
     """
     This is going to be your brilliant competition agent.
