@@ -10,6 +10,7 @@ from util import manhattanDistance, nearestPoint
 from game import Directions, Agent
 import random, util
 import distanceCalculator
+from game import Actions
 
 
 class CompetitionAgent(Agent):
@@ -181,6 +182,11 @@ one of these 3 types. This can be usefull to predict their behaviour
 TODO: theres a bug when a ghost respawns (sometimes when it not just respawned) and their are stil other ghosts left that are sqared. Pacman ignores the non scared ghost and steps on it.
 """
 class MyPacmanAgent(CompetitionAgent):
+    def __init__(self):
+        self.ghostSpawns = []
+
+
+
     """
     This is going to be your brilliant competition agent.
     You might want to copy code from BaselineAgent (above) and/or any previos assignment.
@@ -207,11 +213,52 @@ class MyPacmanAgent(CompetitionAgent):
         for action in self.pacmanPositions:
             self.foodDistances[action] = self.foodDistance(self.pacmanPositions[action], foodList)
 
+    def initGhostSpawnpoints(self, gameState):
+        if not self.ghostSpawns:
+            self.ghostSpawns = []
+            for x in range(gameState.getNumAgents()-1):
+                self.ghostSpawns.append(self.dangerousPoints(gameState,x))
+            print(self.ghostSpawns)
+
+    def dangerousPoints(self, gameState, index):
+        x,y = gameState.getGhostStates()[index].getPosition()
+        nonSafePoints = [(x,y)]
+        for action in gameState.getLegalActions(index+1):
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+
+            nonSafePoints.append((nextx,nexty))
+
+        return nonSafePoints
+
+    def ghostDangerousness(self, gameState):
+        self.ghostDangerValues = {}
+        ghosts = gameState.getGhostStates()
+        for action in self.pacmanPositions:
+            self.ghostDangerValues[action] = self.ghostsDanger(gameState,action,ghosts)
+
+    def ghostsDanger(self,gameState, action,ghosts):
+        return [self.ghostDangerValue(action,ghosts[index], index) for index in range(gameState.getNumAgents()-1)]
+
+    def ghostDangerValue(self, action, ghost, index):
+        scared = ghost.scaredTimer>0
+
+        closer = self.ghostDistances['init'][index] - self.ghostDistances[action][index]
+
+        if not scared and self.ghostDistances[action][index] < 2:
+                return -10
+
+        if scared and ghost.scaredTimer > self.ghostDistances[action][index] and closer > 0:
+                return 3
+
+        return 0
+
     def ghostDistance(self, pos, ghosts):
-        return [(self.getMazeDistance(pos,ghost.getPosition()), ghost.scaredTimer) for ghost in ghosts]
+        return [self.getMazeDistance(pos,ghost.getPosition()) for ghost in ghosts]
 
     def foodDistance(self,pos,foodList):
         return [self.getMazeDistance(pos,food) for food in foodList]
+
 
     def getAction(self, gameState):
         """
@@ -220,9 +267,11 @@ class MyPacmanAgent(CompetitionAgent):
         Just like in the previous project, getAction takes a GameState and returns
         some Directions.X for some X in the set {North, South, West, East, Stop}
         """
+        self.initGhostSpawnpoints(gameState)
         self.initPacmanPositions(gameState)
         self.initGhostDistances(gameState)
         self.initFoodDistances(gameState)
+        self.ghostDangerousness(gameState)
 
         direction = gameState.getPacmanState().getDirection()
 
@@ -230,7 +279,7 @@ class MyPacmanAgent(CompetitionAgent):
         legalMoves = gameState.getLegalActions()
 
         # Choose one of the best actions
-        scores = [self.actionEvalFunction(action) for action in legalMoves]
+        scores = [self.actionEvalFunction(gameState,action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         for ind in bestIndices:
@@ -241,64 +290,44 @@ class MyPacmanAgent(CompetitionAgent):
         return legalMoves[chosenIndex]
 
     #calculates a combined score
-    def actionEvalFunction(self, action):
-        food = self.foodScore(action)
-        ghost = self.ghostScore(action)
-        if(ghost != 0):
-            return ghost
-        return food
+    def actionEvalFunction(self,gameState, action):
+        return self.foodScore(action)+self.ghostScore(gameState,action)
 
-    #closer to ghost = -2 (within certain range)
-    #closer to scared ghost = 2
-    def ghostScore(self,action,minDistance=2):
-        #score based on distance difference before and after action
-        #only looks for the closest ghost atm. can suicide on second closest ghost. (should consider all ghosts)
-        #ignores scared ghost that are second closest to pacman.(should consider all ghosts)
-
-        #avoid non scared ghosts at all cost
-        toClose = False
-        for dist,scaredTime in self.ghostDistances[action]:
-            if scaredTime <= 1 and dist < minDistance:
-                toClose = True
-        if toClose:
-            return -2
-
-        #search for the closest scared ghost
-        scaredGhost = False
-        closestScared = 99999
-        closest       = 99999
-        closer = 0
-        for i in range(len(self.ghostDistances[action])):
-            dist, scaredTime = self.ghostDistances[action][i]
-            oldDist, t = self.ghostDistances['init'][i]
-            if dist < scaredTime+1 and scaredTime!= 0 and dist < closestScared:
-                closestScared = dist
-                scaredGhost = True
-                closer = oldDist - dist
-            if dist < closest:
-                closest = dist
+    def ghostScore(self,gameState, action):
+        value = 0
+        scaredghosts = []
+        ghosts = gameState.getGhostStates()
+        for index in range(gameState.getNumAgents()-1):
+            v = self.ghostDangerValues[action][index]
+            if v < 0:
+                return v
+            if v > 0 and v > value:
+                if self.ghostDistances[action][index] == min(self.ghostDistances[action], key = lambda x: v if ghosts[index].scaredTimer>0 else 9999): #busy here. 2nd use of index is incorrect
+                    value = v
 
 
-        #closest,scared = min(self.ghostDistances[action],key=lambda x: x[0])
-        #closer,newScared = min(self.ghostDistances['init'],key=lambda x:x[0])
-        #closer -= closest
+            dist = self.ghostDistances[action][index]
 
-        if closest < closestScared and closest < minDistance:
-            return -2
+        for v in self.ghostDangerValues[action]:
+            if v < 0:
+                return v
+            if v > 0 and v > value:
+                value = v
 
-        #scared ghosts
-        if scaredGhost and closer >0:
-            return 2
-        if scaredGhost and closer<0:
-            return -2
-
-        return 0 #no ghost to close or edible
+        return value
 
     #closer to food = 1
-    # further from food = -1
+    #further from food = -1
     def foodScore(self,action):
         #score based on distance difference before and after action
         return min(self.foodDistances['init']) - min(self.foodDistances[action])
+
+    def closestScaredGhostIndex(self):
+        oneScared = False
+
+        for index in range(len(self.ghostDistances)):  #todo
+            todo = 0
+        return 0
 
 
 
