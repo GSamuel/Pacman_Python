@@ -185,7 +185,9 @@ class MyPacmanAgent(CompetitionAgent):
     def __init__(self):
         self.ghostSpawns = []
 
-
+    def registerInitialState(self, gameState):
+        super().registerInitialState(gameState)
+        self.ghostSpawns = []
 
     """
     This is going to be your brilliant competition agent.
@@ -218,7 +220,6 @@ class MyPacmanAgent(CompetitionAgent):
             self.ghostSpawns = []
             for x in range(gameState.getNumAgents()-1):
                 self.ghostSpawns.append(self.dangerousPoints(gameState,x))
-            print(self.ghostSpawns)
 
     def dangerousPoints(self, gameState, index):
         x,y = gameState.getGhostStates()[index].getPosition()
@@ -241,15 +242,20 @@ class MyPacmanAgent(CompetitionAgent):
         return [self.ghostDangerValue(action,ghosts[index], index) for index in range(gameState.getNumAgents()-1)]
 
     def ghostDangerValue(self, action, ghost, index):
-        scared = ghost.scaredTimer>0
+        scared = ghost.scaredTimer>self.ghostDistances[action][index]
 
         closer = self.ghostDistances['init'][index] - self.ghostDistances[action][index]
 
         if not scared and self.ghostDistances[action][index] < 2:
                 return -10
 
-        if scared and ghost.scaredTimer > self.ghostDistances[action][index] and closer > 0:
-                return 3
+        if scared and closer > 0:
+            if self.ghostDistances[action][index] <= 2:#als pacman na action zich bevind op de position van de ghost
+                for pos in self.ghostSpawns[index]:
+                    if pos == ghost.getPosition():
+                        return -10
+
+            return 3
 
         return 0
 
@@ -295,24 +301,13 @@ class MyPacmanAgent(CompetitionAgent):
 
     def ghostScore(self,gameState, action):
         value = 0
-        scaredghosts = []
-        ghosts = gameState.getGhostStates()
         for index in range(gameState.getNumAgents()-1):
             v = self.ghostDangerValues[action][index]
             if v < 0:
                 return v
             if v > 0 and v > value:
-                if self.ghostDistances[action][index] == min(self.ghostDistances[action], key = lambda x: v if ghosts[index].scaredTimer>0 else 9999): #busy here. 2nd use of index is incorrect
+                if index == self.closestScaredGhostIndex(gameState,action):
                     value = v
-
-
-            dist = self.ghostDistances[action][index]
-
-        for v in self.ghostDangerValues[action]:
-            if v < 0:
-                return v
-            if v > 0 and v > value:
-                value = v
 
         return value
 
@@ -322,20 +317,22 @@ class MyPacmanAgent(CompetitionAgent):
         #score based on distance difference before and after action
         return min(self.foodDistances['init']) - min(self.foodDistances[action])
 
-    def closestScaredGhostIndex(self):
+    def closestScaredGhostIndex(self,gameState,action):
+        ghosts = gameState.getGhostStates()
+        bestIndex = 0
         oneScared = False
 
-        for index in range(len(self.ghostDistances)):  #todo
-            todo = 0
-        return 0
+        for index in range(gameState.getNumAgents()-1):  #todo
+            dist = self.ghostDistances[action][index]
+            if ghosts[index].scaredTimer >0:
+                if not oneScared:
+                    oneScared = True
+                    bestIndex = index
+                elif dist < self.ghostDistances[action][bestIndex]:
+                    bestIndex = index
 
-
-
+        if oneScared:
+            return bestIndex
+        return -1
 
 MyPacmanAgent = MyPacmanAgent
-
-
-class MyUtils():
-    @staticmethod
-    def test():
-        return 0
