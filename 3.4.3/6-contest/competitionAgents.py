@@ -62,7 +62,6 @@ class CompetitionAgent(Agent):
         self.distancer.getDistance(p1, p2)
         """
         self.distancer = distanceCalculator.Distancer(gameState.data.layout)
-        self.distancer.getMazeDistances()
 
         # comment this out to forgo maze distance computation and use manhattan distances
         # self.distancer.getMazeDistances()
@@ -187,6 +186,7 @@ class MyPacmanAgent(CompetitionAgent):
 
     def registerInitialState(self, gameState):
         super().registerInitialState(gameState)
+        self.distancer.getMazeDistances()
         self.ghostSpawns = []
 
     """
@@ -288,9 +288,9 @@ class MyPacmanAgent(CompetitionAgent):
         scores = [self.actionEvalFunction(gameState,action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        for ind in bestIndices:
-            if legalMoves[ind] == direction:
-                return direction
+        # for ind in bestIndices:
+        #     if legalMoves[ind] == direction: #move forward if possible and there is no better alternative
+        #         return direction
         chosenIndex = random.choice(bestIndices)  # Pick randomly among the best
 
         return legalMoves[chosenIndex]
