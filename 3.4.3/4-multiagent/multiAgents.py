@@ -1,3 +1,6 @@
+#Gideon Hoogeveen s4150538
+#Laura Snijder s4203569
+
 # multiAgents.py
 # --------------
 # Licensing Information: Please do not distribute or publish solutions to this
