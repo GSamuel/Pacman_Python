@@ -254,7 +254,6 @@ class MyPacmanAgent(CompetitionAgent):
                 for pos in self.ghostSpawns[index]:
                     if pos == ghost.getPosition():
                         return -10
-
             return 3
 
         return 0
@@ -306,7 +305,7 @@ class MyPacmanAgent(CompetitionAgent):
             if v < 0:
                 return v
             if v > 0 and v > value:
-                if index == self.closestScaredGhostIndex(gameState,action):
+                if index == self.closestScaredGhostIndex(gameState,action): # only give positive values for actions that makes pacman move closer to a scared ghost
                     value = v
 
         return value
@@ -317,6 +316,7 @@ class MyPacmanAgent(CompetitionAgent):
         # score based on distance difference before and after action
         return min(self.foodDistances['init']) - min(self.foodDistances[action])
 
+    #returns the index of the closest scared ghost. if no ghost is scared return -1
     def closestScaredGhostIndex(self,gameState,action):
         ghosts = gameState.getGhostStates()
         bestIndex = 0
