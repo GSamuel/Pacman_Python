@@ -173,12 +173,9 @@ class TimeoutAgent(Agent):
 """
 TODO: Pacman can still very easiliy be captured by 2 ghosts. Pacman does consider multiple ghosts at the same time, but still walks into
 corridors when a ghosts is clearly heading pacmans way.
-TODO: The same goes for paths with 1 length that lead to a dead end. Pacman should take the minimal steps a ghost can take to cornor pacman in a path into
-consideration.
-TODO: Power pellet optimalization: don't eat power pellets, when pacman is still able to eat close ghosts. Don't eat the last food when there are still
-power pellets left.
 TODO: There are 3 different type of agents. (fixed path, random agent and walk to pacman agent) Try to identify the ghosts by their behaviour as
 one of these 3 types. This can be usefull to predict their behaviour
+TODO: predict ghost moves when scared to cut off their path
 """
 class MyPacmanAgent(CompetitionAgent):
     def __init__(self):
@@ -188,14 +185,74 @@ class MyPacmanAgent(CompetitionAgent):
         super().registerInitialState(gameState)
         self.distancer.getMazeDistances()
         self.ghostSpawns = []
+        self.initDeadEnds(gameState)
+
+    def initDeadEnds(self,gameState):
+        self.deadEnds = []
+        walls = gameState.getWalls()
+        for i in range(1,walls.width-2):
+            for j in range(1,walls.height-2):
+                wallCount = self.countSurroundingWalls((i,j),walls)
+                if wallCount == 3:
+                    self.deadEnds.append(((i,j), 4))
+
+    def countSurroundingWalls(self, pos, walls):
+        x,y = pos
+        if not walls[int(x)][int(y)]:
+            wallcount = 0
+            for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+                dx, dy = Actions.directionToVector(action)
+                nextx, nexty = int(x + dx), int(y + dy)
+                if walls[nextx][nexty]:
+                    wallcount += 1
+            return wallcount
+
+        return -1
+
+
+
 
     """
     This is going to be your brilliant competition agent.
-    You might want to copy code from BaselineAgent (above) and/or any previos assignment.
+    You might want to copy code from BaselineAgent (above) and/or any previous assignment.
     """
 
     # The following functions have been declared for you,
     # but they don't do anything yet (getAction), or work very poorly (evaluationFunction)
+
+    def initPredictedGhostPath(self,gameState):
+        self.predictedGhostPath = []
+        ghosts = gameState.getGhostStates()
+        for ghost in ghosts:
+            pos = ghost.getPosition()
+            dir = ghost.getDirection()
+            path = self.allPointsTillCrossroad(gameState,pos,dir)
+            self.predictedGhostPath.append(path)
+
+    def allPointsTillCrossroad(self,gameState,pos,direction):
+        x,y = pos
+        walls = gameState.getWalls()
+        wallCount = self.countSurroundingWalls(pos,walls)
+
+        if wallCount >= 3 or wallCount <= 1:
+            return []
+        if direction == Directions.STOP:
+            return []
+
+        newPos = (0,0)
+        newDirection = Directions.STOP
+
+        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if Directions.REVERSE[direction] != action:
+                if not walls[nextx][nexty]:
+                    newDirection = action
+                    newPos = (nextx,nexty)
+
+        return [(x,y)] + self.allPointsTillCrossroad(gameState,newPos,newDirection)# new position and new direction
+
+
 
     def initPacmanPositions(self,gameState):
         self.pacmanPositions = {}
@@ -211,9 +268,15 @@ class MyPacmanAgent(CompetitionAgent):
 
     def initFoodDistances(self, gameState):
         self.foodDistances = {}
-        foodList = gameState.getFood().asList() + gameState.getCapsules()
+        foodList = gameState.getFood().asList()
         for action in self.pacmanPositions:
             self.foodDistances[action] = self.foodDistance(self.pacmanPositions[action], foodList)
+
+    def initCapsuleDistances(self,gameState):
+        self.capsuleDistances = {}
+        capsuleList = gameState.getCapsules()
+        for action in self.pacmanPositions:
+            self.capsuleDistances[action] = self.foodDistance(self.pacmanPositions[action], capsuleList)
 
     def initGhostSpawnpoints(self, gameState):
         if not self.ghostSpawns:
@@ -246,14 +309,21 @@ class MyPacmanAgent(CompetitionAgent):
 
         closer = self.ghostDistances['init'][index] - self.ghostDistances[action][index]
 
-        if not scared and self.ghostDistances[action][index] < 2:
+        if not scared:
+            if self.ghostDistances[action][index] < 2:
                 return -10
+            for pos,value in self.deadEnds:
+                if self.pacmanPositions[action] ==  pos:
+                    if self.ghostDistances[action][index] < value:
+                        return -10
+
 
         if scared and closer > 0:
             if self.ghostDistances[action][index] <= 2:#als pacman na action zich bevind op de position van de ghost
                 for pos in self.ghostSpawns[index]:
                     if pos == ghost.getPosition():
                         return -10
+
             return 3
 
         return 0
@@ -276,6 +346,8 @@ class MyPacmanAgent(CompetitionAgent):
         self.initPacmanPositions(gameState)
         self.initGhostDistances(gameState)
         self.initFoodDistances(gameState)
+        self.initCapsuleDistances(gameState)
+        self.initPredictedGhostPath(gameState)
         self.ghostDangerousness(gameState)
 
         direction = gameState.getPacmanState().getDirection()
@@ -314,7 +386,47 @@ class MyPacmanAgent(CompetitionAgent):
     # further from food = -1
     def foodScore(self,action):
         # score based on distance difference before and after action
-        return min(self.foodDistances['init']) - min(self.foodDistances[action])
+
+        initFood = 0
+        initCaps = 0
+        caps = False
+
+        if self.foodDistances['init']:
+            initFood = min(self.foodDistances['init'])
+        if self.capsuleDistances['init']:
+            initCaps = min(self.capsuleDistances['init'])
+            caps = True
+
+        minInit = initFood
+        if caps and len(self.foodDistances['init']) <= 8:
+            minInit = initCaps
+        elif caps:
+            minInit = min([initFood,initCaps])
+
+        actionFood = 0
+        actionCaps = 0
+        caps = False
+
+        if self.foodDistances[action]:
+            actionFood = min(self.foodDistances[action])
+        if self.capsuleDistances[action]:
+            actionCaps = min(self.capsuleDistances[action])
+            caps = True
+
+        minAction = actionFood
+
+        if caps and len(self.foodDistances[action]) <= 8:
+            minAction = actionCaps
+        elif caps:
+            minAction = min([actionFood,actionCaps])
+
+        if minInit - minAction <-1 or minInit - minAction > 1:
+            print("oh nooooes")
+
+        # minFood =  min(self.foodDistances['init']) - min(self.foodDistances[action])
+        # minCapsule = min(self.capsuleDistances['init']) - min(self.capsuleDistances[action])
+
+        return minInit - minAction
 
     #returns the index of the closest scared ghost. if no ghost is scared return -1
     def closestScaredGhostIndex(self,gameState,action):
