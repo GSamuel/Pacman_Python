@@ -266,17 +266,17 @@ class MyPacmanAgent(CompetitionAgent):
         for action in self.pacmanPositions:
             self.ghostDistances[action] = self.ghostDistance(self.pacmanPositions[action], ghosts)
 
-    def initFoodDistances(self, gameState):
+    def initFoodDistances(self, gameState): #optimize with maze distance with a paht that does not go through a ghost :D
         self.foodDistances = {}
         foodList = gameState.getFood().asList()
         for action in self.pacmanPositions:
-            self.foodDistances[action] = self.foodDistance(self.pacmanPositions[action], foodList)
+            self.foodDistances[action] = self.foodDistance(gameState, self.pacmanPositions[action], foodList)
 
     def initCapsuleDistances(self,gameState):
         self.capsuleDistances = {}
         capsuleList = gameState.getCapsules()
         for action in self.pacmanPositions:
-            self.capsuleDistances[action] = self.foodDistance(self.pacmanPositions[action], capsuleList)
+            self.capsuleDistances[action] = self.foodDistance(gameState, self.pacmanPositions[action], capsuleList)
 
     def initGhostSpawnpoints(self, gameState):
         if not self.ghostSpawns:
@@ -319,7 +319,7 @@ class MyPacmanAgent(CompetitionAgent):
 
             for pos,value in self.predictedGhostPath[index]:
                 if self.pacmanPositions[action] == pos:
-                    return -6
+                    return -7 + value * 0.01
 
 
         if scared and closer > 0:
@@ -335,8 +335,34 @@ class MyPacmanAgent(CompetitionAgent):
     def ghostDistance(self, pos, ghosts):
         return [self.getMazeDistance(pos,ghost.getPosition()) for ghost in ghosts]
 
-    def foodDistance(self,pos,foodList):
-        return [self.getMazeDistance(pos,food) for food in foodList]
+    def foodDistance(self,gameState, pos,foodList):
+        foodDistances = []
+        frontier = []
+        visited = []
+        frontier.append((pos,0))
+
+        walls = gameState.getWalls()
+        ghosts = gameState.getGhostStates()
+
+        ghostPos = [item[0] for sublist in self.predictedGhostPath for item in sublist]
+        ghostPos += [ghost.getPosition() for ghost in ghosts]
+
+        while frontier:
+            ((x,y),dist) = frontier.pop(0)
+            if not walls[x][y] and (x,y) not in ghostPos:
+                if (x,y) not in visited:
+                    if (x,y) in foodList:
+                        foodDistances.append(dist)
+
+                    for action in [Directions.EAST, Directions.WEST, Directions.NORTH, Directions.SOUTH]:
+                        dx, dy = Actions.directionToVector(action)
+                        nextx, nexty = int(x + dx), int(y + dy)
+                        frontier.append(((nextx,nexty),dist+1))
+                    visited.append((x,y))
+
+        return foodDistances
+
+        #return [self.getMazeDistance(pos,food) for food in foodList]
 
 
     def getAction(self, gameState):
@@ -349,9 +375,9 @@ class MyPacmanAgent(CompetitionAgent):
         self.initGhostSpawnpoints(gameState)
         self.initPacmanPositions(gameState)
         self.initGhostDistances(gameState)
+        self.initPredictedGhostPath(gameState)
         self.initFoodDistances(gameState)
         self.initCapsuleDistances(gameState)
-        self.initPredictedGhostPath(gameState)
         self.ghostDangerousness(gameState)
 
         direction = gameState.getPacmanState().getDirection()
@@ -425,7 +451,8 @@ class MyPacmanAgent(CompetitionAgent):
             minAction = min([actionFood,actionCaps])
 
         if minInit - minAction <-1 or minInit - minAction > 1:
-            print("oh nooooes")
+            #print("oh nooooes")
+            return -1
 
         # minFood =  min(self.foodDistances['init']) - min(self.foodDistances[action])
         # minCapsule = min(self.capsuleDistances['init']) - min(self.capsuleDistances[action])

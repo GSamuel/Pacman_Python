@@ -5,7 +5,7 @@ import imp
 
 solutionModule='competitionAgents'
 solutionFile  =solutionModule + '.py'
-execList=['-p', 'MyPacmanAgent', '-q', '-t', '--frameTime', '0', '-f', '-n', '10']
+execList=['-p', 'MyPacmanAgent', '-q', '-t', '--frameTime', '0', '-f', '-n', '50']
 studentRegexp=r'_([^_]*)_.*'
 logfileName = 'output.txt'
 htmlstyle = 'leaderboard.css'
